@@ -9,7 +9,7 @@ class SplashController extends GetxController {
   }
 
   void _navigateToHome() async {
-    await Future.delayed(Duration(seconds: 10));
+    await Future.delayed(Duration(seconds: 8));
     Get.offAllNamed(AppRoutes.HOME);
   }
 }

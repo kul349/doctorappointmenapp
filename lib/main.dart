@@ -1,3 +1,4 @@
+import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'routes/app_routes.dart';
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Doctor Appointment App',
+      theme: ThemeData(primaryColor: greenColor),
 
       // Set the initial route (Splash screen)
       initialRoute: AppRoutes.SPLASH,
@@ -22,9 +24,6 @@ class MyApp extends StatelessWidget {
       getPages: AppRoutes.routes,
 
       // Define the app's theme
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
     );
   }
 }
