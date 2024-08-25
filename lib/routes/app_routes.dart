@@ -1,3 +1,5 @@
+import 'package:doctorappointmenapp/views/notification/notification.dart';
+import 'package:doctorappointmenapp/views/patient/appointment.dart';
 import 'package:doctorappointmenapp/views/patient/home_screen.dart';
 import 'package:doctorappointmenapp/views/registration/doctor_login.dart';
 import 'package:doctorappointmenapp/views/registration/patient_login.dart';
@@ -16,6 +18,8 @@ class AppRoutes {
   static const DOCTOR_LOGIN = '/doctor_login';
   static const PATIENT_LOGIN = '/Patient_login';
   static const HOMESCREEN = '/homescreen';
+  static const NOTIFICATION = '/ notifications';
+  static const APPOINTMENTVIEW = '/apointmentsview';
 
   // List of GetPages that defines the routes and their corresponding views
   static final routes = [
@@ -45,7 +49,15 @@ class AppRoutes {
     ),
     GetPage(
       name: HOMESCREEN,
-      page: () => const HomeScreen(),
+      page: () => HomeScreen(),
+    ),
+    GetPage(
+      name: NOTIFICATION,
+      page: () => NotificationView(),
+    ),
+    GetPage(
+      name: APPOINTMENTVIEW,
+      page: () => const AppointmentView(),
     ),
   ];
 }
