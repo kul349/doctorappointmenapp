@@ -39,6 +39,8 @@ dependencies:
   get: ^4.6.6
   google_fonts: ^6.2.1
   google_sign_in: ^6.2.1
+  flutter_svg_provider: ^1.0.7
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -67,7 +69,17 @@ flutter:
     - lib/assets/lottie/splash_animation.json
     - lib/assets/lottie/doctor.json
     - lib/assets/lottie/patient.json
-    - lib/assets/logo.png
+    - lib/assets/
+    - lib/assets/svg/img-hospital.svg
+    - lib/assets/svg/img-dental.svg
+    - lib/assets/svg/img-consultation.svg
+    - lib/assets/svg/img-heart.svg
+    - lib/assets/svg/img-hospital.svg
+    - lib/assets/svg/img-medicine.svg
+    - lib/assets/svg/img-physician.svg
+    - lib/assets/svg/img-skin.svg
+    - lib/assets/svg/img-surgeon.svg
+    
     
   #   - images/a_dot_ham.jpeg
 

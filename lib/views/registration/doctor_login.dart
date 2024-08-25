@@ -1,18 +1,18 @@
-import 'package:doctorappointmenapp/controllers/register_controller.dart';
+import 'package:doctorappointmenapp/controllers/login_controller.dart';
 import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class DoctorRegisterView extends StatelessWidget {
+class DoctorLoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(RegisterController());
+    final controller = Get.put(LoginController());
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Doctor Register',
+          'Doctor Login',
           style: boldTextStyle.copyWith(color: whiteColor),
         ),
         backgroundColor: greenColor,
@@ -23,7 +23,7 @@ class DoctorRegisterView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Create your account',
+              'Login to your account',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -50,25 +50,12 @@ class DoctorRegisterView extends StatelessWidget {
               ),
               obscureText: true,
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: controller.confirmPasswordController,
-              decoration: InputDecoration(
-                labelText: 'Confirm Password',
-                border: const OutlineInputBorder(),
-                prefixIcon: Icon(Icons.lock, color: greenColor),
-              ),
-              obscureText: true,
-            ),
             const SizedBox(height: 60),
             Center(
               child: SizedBox(
                 width: 180,
                 child: ElevatedButton(
-                  onPressed: () {
-                    controller.registerDoctor();
-                    Get.to(AppRoutes.DOCTOR_LOGIN);
-                  },
+                  onPressed: () => controller.loginDoctor(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: greenColor,
                     padding: const EdgeInsets.symmetric(vertical: 15),
@@ -77,7 +64,7 @@ class DoctorRegisterView extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Register',
+                    'Login',
                     style: mediumTextStyle.copyWith(
                         color: whiteColor, fontSize: 16),
                   ),
@@ -109,11 +96,9 @@ class DoctorRegisterView extends StatelessWidget {
             const SizedBox(height: 24),
             Center(
               child: TextButton(
-                onPressed: () {
-                  Get.toNamed(AppRoutes.DOCTOR_LOGIN);
-                },
+                onPressed: () => Get.toNamed(AppRoutes.DOCTOR_REGISTER),
                 child: Text(
-                  'Already have an account? Login',
+                  'Don\'t have an account? Register',
                   style:
                       boldTextStyle.copyWith(color: greenColor, fontSize: 18),
                 ),

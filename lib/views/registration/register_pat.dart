@@ -1,4 +1,5 @@
 import 'package:doctorappointmenapp/controllers/register_controller.dart';
+import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,7 +24,7 @@ class PatientRegisterView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Create your account',
               style: TextStyle(
                 fontSize: 24,
@@ -34,9 +35,9 @@ class PatientRegisterView extends StatelessWidget {
             const SizedBox(height: 24),
             TextField(
               controller: controller.emailController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
-                border: const OutlineInputBorder(),
+                border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.email, color: greenColor),
               ),
               keyboardType: TextInputType.emailAddress,
@@ -44,9 +45,9 @@ class PatientRegisterView extends StatelessWidget {
             const SizedBox(height: 16),
             TextField(
               controller: controller.passwordController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
-                border: const OutlineInputBorder(),
+                border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.lock, color: greenColor),
               ),
               obscureText: true,
@@ -54,9 +55,9 @@ class PatientRegisterView extends StatelessWidget {
             const SizedBox(height: 16),
             TextField(
               controller: controller.confirmPasswordController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Confirm Password',
-                border: const OutlineInputBorder(),
+                border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.lock, color: greenColor),
               ),
               obscureText: true,
@@ -65,7 +66,10 @@ class PatientRegisterView extends StatelessWidget {
             SizedBox(
               width: double.infinity, // Full width
               child: ElevatedButton(
-                onPressed: () => controller.registerPatient(),
+                onPressed: () {
+                  controller.registerPatient();
+                  Get.to(AppRoutes.PATIENT_LOGIN);
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: greenColor,
                   padding: const EdgeInsets.symmetric(vertical: 15),
@@ -101,7 +105,9 @@ class PatientRegisterView extends StatelessWidget {
             const SizedBox(height: 24),
             Center(
               child: TextButton(
-                onPressed: () => Get.back(),
+                onPressed: () {
+                  Get.toNamed(AppRoutes.PATIENT_LOGIN);
+                },
                 child: Text(
                   'Already have an account? Login',
                   style:
