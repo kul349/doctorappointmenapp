@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class AppointmentView extends StatefulWidget {
   const AppointmentView({super.key});
@@ -11,7 +12,17 @@ class _AppointmentViewState extends State<AppointmentView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(child: Text("appointment")),
-    );
+        appBar: AppBar(
+          title: const Text("AppointmentView"),
+          centerTitle: true,
+        ),
+        body: const SingleChildScrollView(
+            child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [Text("AppointmentView")],
+          ),
+        )));
   }
 }

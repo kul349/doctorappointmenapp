@@ -79,6 +79,7 @@ flutter:
     - lib/assets/svg/img-physician.svg
     - lib/assets/svg/img-skin.svg
     - lib/assets/svg/img-surgeon.svg
+    - lib/assets/svg/icon-burger.svg
     
     
   #   - images/a_dot_ham.jpeg

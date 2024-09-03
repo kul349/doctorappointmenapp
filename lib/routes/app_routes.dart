@@ -18,8 +18,9 @@ class AppRoutes {
   static const DOCTOR_LOGIN = '/doctor_login';
   static const PATIENT_LOGIN = '/Patient_login';
   static const HOMESCREEN = '/homescreen';
-  static const NOTIFICATION = '/ notifications';
   static const APPOINTMENTVIEW = '/apointmentsview';
+  static const NOTIFICATION =
+      '/notifications'; // Remove the space before 'notifications'
 
   // List of GetPages that defines the routes and their corresponding views
   static final routes = [
@@ -49,11 +50,11 @@ class AppRoutes {
     ),
     GetPage(
       name: HOMESCREEN,
-      page: () => HomeScreen(),
+      page: () => const HomeScreen(),
     ),
     GetPage(
       name: NOTIFICATION,
-      page: () => NotificationView(),
+      page: () => const NotificationView(),
     ),
     GetPage(
       name: APPOINTMENTVIEW,

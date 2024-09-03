@@ -5,7 +5,7 @@ import 'package:doctorappointmenapp/widgets/home_screen_navbar.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       child: TextField(
                         style:
-                            Theme.of(context).textTheme.displayLarge!.copyWith(
+                            Theme.of(context).textTheme.headlineSmall!.copyWith(
                                   color: kBlackColor900,
                                 ),
                         cursorHeight: 24,
@@ -73,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                             maxHeight: 24,
                           ),
                           hintText: 'Search doctor, medicines etc',
-                          hintStyle: Theme.of(context).textTheme.bodyLarge,
+                          hintStyle: Theme.of(context).textTheme.headlineSmall,
                           contentPadding: const EdgeInsets.only(bottom: 5),
                           border: InputBorder.none,
                         ),

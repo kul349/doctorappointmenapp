@@ -8,13 +8,15 @@ class BottomNavController extends GetxController {
     selectedIndex.value = index;
     switch (index) {
       case 0:
-        Get.offNamed(AppRoutes.HOME); // Navigate to Home page
+        Get.toNamed(AppRoutes.HOMESCREEN); // Navigate to Home page
         break;
       case 1:
-        Get.offNamed(AppRoutes.NOTIFICATION); // Navigate to Notification page
+        print("Navigating to Notification");
+
+        Get.toNamed(AppRoutes.NOTIFICATION); // Navigate to Notification page
         break;
       case 2:
-        Get.offNamed(AppRoutes.APPOINTMENTVIEW); // Navigate to Appointment page
+        Get.toNamed(AppRoutes.APPOINTMENTVIEW); // Navigate to Appointment page
         break;
     }
   }
