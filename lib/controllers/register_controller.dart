@@ -1,4 +1,5 @@
 import 'package:doctorappointmenapp/services/auth_service.dart';
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:doctorappointmenapp/routes/app_routes.dart';
@@ -19,7 +20,6 @@ class RegisterController extends GetxController {
   final authService = AuthService();
 
   // Replace with your backend URL
-  final String baseUrl = 'http://192.168.60.85:8000/api/v1/users/register';
 
   Future<void> registerPatient() async {
     final String email = emailController.text.trim();
@@ -87,16 +87,5 @@ class RegisterController extends GetxController {
     fullNameController.dispose();
     userNameController.dispose();
     super.onClose();
-  }
-
-  void loginWithGoogle() async {
-    final result = await authService.signInWithGoogle();
-
-    if (result) {
-      Get.snackbar('Success', 'Logged in with Google');
-      // Navigate to home page
-    } else {
-      Get.snackbar('Error', 'Google sign-in failed');
-    }
   }
 }

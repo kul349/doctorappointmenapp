@@ -1,4 +1,4 @@
-import 'package:doctorappointmenapp/controllers/login_controller.dart';
+import 'package:doctorappointmenapp/controllers/auth_controller.dart';
 import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +7,9 @@ import 'package:get/get.dart';
 class DoctorLoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(LoginController());
-
+    final AuthController _authController = Get.put(AuthController());
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -22,7 +23,7 @@ class DoctorLoginView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Login to your account',
               style: TextStyle(
                 fontSize: 24,
@@ -30,10 +31,10 @@ class DoctorLoginView extends StatelessWidget {
                 color: greenColor,
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             TextField(
-              controller: controller.emailController,
-              decoration: InputDecoration(
+              controller: emailController,
+              decoration: const InputDecoration(
                 labelText: 'Email',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.email, color: greenColor),
@@ -42,8 +43,8 @@ class DoctorLoginView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             TextField(
-              controller: controller.passwordController,
-              decoration: InputDecoration(
+              controller: passwordController,
+              decoration: const InputDecoration(
                 labelText: 'Password',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.lock, color: greenColor),
@@ -55,7 +56,13 @@ class DoctorLoginView extends StatelessWidget {
               child: SizedBox(
                 width: 180,
                 child: ElevatedButton(
-                  onPressed: () => controller.loginDoctor(),
+                  onPressed: () {
+                    final email = emailController.text.trim();
+                    final password = passwordController.text.trim();
+
+                    // Trigger login process
+                    _authController.loginUser(email, password);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: greenColor,
                     padding: const EdgeInsets.symmetric(vertical: 15),
@@ -72,28 +79,6 @@ class DoctorLoginView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 80),
-            Center(
-              child: SizedBox(
-                width: 200,
-                child: ElevatedButton.icon(
-                  onPressed: () => controller.loginWithGoogle(),
-                  icon: const Icon(Icons.login, color: Colors.white),
-                  label: Text(
-                    'Login with Google',
-                    style: mediumTextStyle.copyWith(
-                        color: whiteColor, fontSize: 18),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: greenColor,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
             Center(
               child: TextButton(
                 onPressed: () => Get.toNamed(AppRoutes.DOCTOR_REGISTER),

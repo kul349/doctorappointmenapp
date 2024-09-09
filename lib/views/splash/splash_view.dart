@@ -18,7 +18,7 @@ class SplashView extends StatelessWidget {
               height: 70,
             ),
             Lottie.asset(
-              'lib/assets/lottie/splash_animation.json',
+              'assets/lottie/splash_animation.json',
               width: 500,
               height: 500,
               fit: BoxFit.fill,
@@ -38,7 +38,7 @@ class SplashView extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.6),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset:const  Offset(0, 3), // changes position of shadow
+                      offset: const Offset(0, 3), // changes position of shadow
                     ),
                   ],
                 ),

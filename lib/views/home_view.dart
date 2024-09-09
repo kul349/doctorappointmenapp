@@ -16,7 +16,7 @@ class HomeView extends StatelessWidget {
           children: [
             const SizedBox(height: 40),
             Image.asset(
-              'lib/assets/logo.png',
+              'assets/logo.png',
               width: 155,
             ),
             const SizedBox(height: 35),
@@ -60,7 +60,7 @@ class HomeView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Lottie.asset(
-                              'lib/assets/lottie/doctor.json',
+                              'assets/lottie/doctor.json',
                               width: 150,
                               height: 150,
                               fit: BoxFit.fill,
@@ -106,7 +106,7 @@ class HomeView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Lottie.asset(
-                              'lib/assets/lottie/patient.json',
+                              'assets/lottie/patient.json',
                               width: 150,
                               height: 150,
                               fit: BoxFit.fill,

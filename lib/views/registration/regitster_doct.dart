@@ -44,7 +44,7 @@ class DoctorRegisterView extends StatelessWidget {
             const SizedBox(height: 16),
             TextField(
               controller: controller.passwordController,
-              decoration:const  InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.lock, color: greenColor),
@@ -54,7 +54,7 @@ class DoctorRegisterView extends StatelessWidget {
             const SizedBox(height: 16),
             TextField(
               controller: controller.confirmPasswordController,
-              decoration:const  InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Confirm Password',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.lock, color: greenColor),
@@ -90,28 +90,6 @@ class DoctorRegisterView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 80),
-            Center(
-              child: SizedBox(
-                width: 200,
-                child: ElevatedButton.icon(
-                  onPressed: () => controller.loginWithGoogle(),
-                  icon: const Icon(Icons.login, color: Colors.white),
-                  label: Text(
-                    'Login with Google',
-                    style: mediumTextStyle.copyWith(
-                        color: whiteColor, fontSize: 18),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: greenColor,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
             Center(
               child: TextButton(
                 onPressed: () {

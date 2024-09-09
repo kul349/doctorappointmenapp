@@ -19,13 +19,14 @@ class DoctorRegisterController extends GetxController {
   final qualificationsController = TextEditingController();
   final certificationsController = TextEditingController();
   final bioController = TextEditingController();
-  
+
   // Avatar image file
   File? avatarImage;
   final authService = AuthService();
 
   // Replace with your backend URL
-  final String baseUrl = 'http://localhost:8000/api/v1/doctors/register'; // Adjust URL for your backend
+  final String baseUrl =
+      'http://localhost:8000/api/v1/doctors/register'; // Adjust URL for your backend
 
   Future<void> registerDoctor() async {
     final String email = emailController.text.trim();
@@ -106,16 +107,5 @@ class DoctorRegisterController extends GetxController {
     certificationsController.dispose();
     bioController.dispose();
     super.onClose();
-  }
-
-  void loginWithGoogle() async {
-    final result = await authService.signInWithGoogle();
-
-    if (result) {
-      Get.snackbar('Success', 'Logged in with Google');
-      // Navigate to home page
-    } else {
-      Get.snackbar('Error', 'Google sign-in failed');
-    }
   }
 }

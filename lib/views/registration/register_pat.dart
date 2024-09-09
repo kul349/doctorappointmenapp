@@ -133,26 +133,7 @@ class PatientRegisterView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    controller.loginWithGoogle();
-                  },
-                  icon: const Icon(Icons.login, color: Colors.white),
-                  label: Text('Login with Google',
-                      style: mediumTextStyle.copyWith(
-                          color: whiteColor, fontSize: 18)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: greenColor,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
+
               Center(
                 child: TextButton(
                   onPressed: () {
