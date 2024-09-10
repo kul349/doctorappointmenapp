@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const HomeScreenNavbar(),
+                    HomeScreenNavbar(),
                     const SizedBox(
                       height: 30,
                     ),
@@ -82,7 +82,7 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(
                       height: 24,
                     ),
-                    const DoctorAppGridMenu(),
+                    DoctorAppGridMenu(),
                     const SizedBox(
                       height: 24,
                     ),

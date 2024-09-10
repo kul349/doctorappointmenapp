@@ -34,11 +34,12 @@ class RegisterController extends GetxController {
     }
 
     try {
-      var request = http.MultipartRequest('POST', Uri.parse(baseUrl))
-        ..fields['email'] = email
-        ..fields['password'] = password
-        ..fields['fullName'] = fullName
-        ..fields['userName'] = userName;
+      var request =
+          http.MultipartRequest('POST', Uri.parse('$baseUrl/users/register'))
+            ..fields['email'] = email
+            ..fields['password'] = password
+            ..fields['fullName'] = fullName
+            ..fields['userName'] = userName;
 
       if (avatarImage != null) {
         final bytes = await avatarImage!.readAsBytes();

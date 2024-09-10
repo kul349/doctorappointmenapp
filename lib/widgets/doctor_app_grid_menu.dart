@@ -1,15 +1,15 @@
+// doctor_app_grid_menu.dart
+import 'package:doctorappointmenapp/controllers/doctor_menu_controller.dart';
 import 'package:doctorappointmenapp/views/doctor/page/doctor_menu_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // Ensure flutter_svg is included
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import '../controllers/doctor_menu_controller.dart'; // Adjust import based on your directory structure
 
 class DoctorAppGridMenu extends StatelessWidget {
-  const DoctorAppGridMenu({super.key});
+  const DoctorAppGridMenu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Instantiate the controller
     final DoctorMenuController controller = Get.find();
 
     return Obx(
@@ -26,7 +26,8 @@ class DoctorAppGridMenu extends StatelessWidget {
           final menuItem = controller.doctorMenu[index];
           return GestureDetector(
             onTap: () {
-              Get.to(() => GridMenuItem(doctorMenuItem: menuItem));
+              // Navigate to the doctor list page with the selected specialization
+              Get.to(() => DoctorListPage(specialization: menuItem.name));
             },
             child: Container(
               constraints: const BoxConstraints(

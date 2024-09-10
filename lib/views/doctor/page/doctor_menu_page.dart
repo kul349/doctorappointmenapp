@@ -1,68 +1,88 @@
-import 'package:doctorappointmenapp/controllers/doctordetials_menu_controller.dart';
+// doctor_list_page.dart
+import 'package:doctorappointmenapp/controllers/patient_getalldoctor_controller.dart';
+import 'package:doctorappointmenapp/models/doctor/gride_model.dart';
 import 'package:flutter/material.dart';
-import 'package:doctorappointmenapp/controllers/doctor_menu_controller.dart';
-import 'package:get/get.dart'; // Import the DoctorMenu model
+import 'package:get/get.dart';
 
-class GridMenuItem extends StatelessWidget {
-  final DoctorMenu
-      doctorMenuItem; // This should be the correct parameter name and type
+class DoctorListPage extends StatelessWidget {
+  final String specialization;
+  final DoctorController doctorController = Get.find();
 
-  GridMenuItem({
+  DoctorListPage({
+    required this.specialization,
     Key? key,
-    required this.doctorMenuItem, // Ensure this matches what you're passing
-  }) : super(key: key);
-  final DetailsController controller = Get.put(DetailsController());
+  }) : super(key: key) {
+    // Fetch doctors by the selected specialization
+    doctorController.fetchDoctorsBySpecialization(specialization);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-              doctorMenuItem.name), // Display the name of the selected item
-          centerTitle: true,
-        ),
-        body: Obx(() {
-          if (controller.isLoading.value) {
-            // Show loading indicator while data is being fetched
-            return const Center(child: CircularProgressIndicator());
-          }
+      appBar: AppBar(
+        title: Text('$specialization Doctors'),
+        centerTitle: true,
+      ),
+      body: Obx(() {
+        // Show a loading indicator while data is being fetched
+        if (doctorController.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          // Display the details once the data is loaded
-          final detail = controller.detailData;
-
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Name: ${detail['name']}',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                Text('Qualification: ${detail['qualification']}'),
-                SizedBox(height: 10),
-                Text('Experience: ${detail['experience']}'),
-              ],
-            ),
+        // If there are no doctors available after filtering, show a message
+        if (doctorController.filteredDoctors.isEmpty) {
+          return Center(
+            child: Text('No doctors available for $specialization.'),
           );
         }
-            //Padding(
-            //   padding: const EdgeInsets.all(16.0),
-            //   child: Column(
-            //     children: [
-            //       if (doctorMenuItem.image.isNotEmpty)
-            //         SvgPicture.asset(doctorMenuItem.image,
-            //             height: 100, width: 100), // Use SvgPicture for SVG images
-            //       const SizedBox(height: 16),
-            //       Text(
-            //         doctorMenuItem.name, // Display the name
-            //         style: Theme.of(context).textTheme.bodyLarge,
-            //       ),
-            //       // Add more details or widgets as needed
-            //     ],
-            //   ),
-            ) // ),
+
+        // Display the filtered list of doctors
+        return ListView.builder(
+          itemCount: doctorController.filteredDoctors.length,
+          itemBuilder: (context, index) {
+            final DoctorModel doctor = doctorController.filteredDoctors[index];
+
+            return Card(
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(16.0),
+                leading: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: doctor.avatar.isNotEmpty
+                      ? NetworkImage(doctor.avatar)
+                      : null,
+                  child: doctor.avatar.isEmpty
+                      ? const Icon(Icons.person, size: 30)
+                      : null,
+                ),
+                title: Text(
+                  doctor.fullName,
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 5),
+                    Text('Username: ${doctor.doctorName}'),
+                    const SizedBox(height: 5),
+                    Text('Specialization: ${doctor.specialization}'),
+                    const SizedBox(height: 5),
+                    Text('Email: ${doctor.email}'),
+                  ],
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  // Handle tap if needed
+                },
+              ),
+            );
+          },
         );
+      }),
+    );
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:doctorappointmenapp/models/patient/patient_model.dart';
 import 'package:doctorappointmenapp/services/token_service.dart';
 import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:http/http.dart' as http;
@@ -16,15 +16,12 @@ class AuthService {
   //   // Example: Send email and password to your backend or Firebase
   //   return true; // Example
   // }
-
-// login-user and token
-  // Replace with your API URL
   final TokenService _tokenService = TokenService(); // Instance of TokenService
 
-  // Function to handle login and store token
-  Future<String?> login(String email, String password) async {
+  // Function to handle user login and store token
+  Future<UserModel?> login(String email, String password) async {
     try {
-      final url = Uri.parse('$baseUrl/login'); // API endpoint for login
+      final url = Uri.parse('$baseUrl/users/login'); // API endpoint for login
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -32,13 +29,23 @@ class AuthService {
       );
 
       if (response.statusCode == 200) {
+        print('Response body: ${response.body}'); // Debugging line
         final data = jsonDecode(response.body); // Parse the response body
-        final token = data['token']; // Extract the token from the response
 
-        await _tokenService
-            .storeToken(token); // Store the token using TokenService
+        final accessToken =
+            data['data']?['accessToken'] as String?; // Extract the accessToken
 
-        return token; // Return the token if needed
+        if (accessToken != null && accessToken.isNotEmpty) {
+          await _tokenService
+              .storeToken(accessToken); // Store the token using TokenService
+
+          final userJson =
+              data['data']?['user'] ?? {}; // Safely parse the user data
+          return UserModel.fromJson(userJson); // Return the parsed user model
+        } else {
+          print('Access token is null or empty'); // Debugging line
+          return null;
+        }
       } else {
         print('Login failed: ${response.body}'); // Handle error response
         return null;
@@ -51,6 +58,11 @@ class AuthService {
 
   // Function to log out and remove the token
   Future<void> logout() async {
-    await _tokenService.removeToken();
+    try {
+      await _tokenService.removeToken(); // Remove the token from secure storage
+      print('Successfully logged out');
+    } catch (e) {
+      print('An error occurred during logout: $e');
+    }
   }
 }

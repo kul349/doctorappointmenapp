@@ -26,7 +26,7 @@ class PatientLoginView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Login to your account',
                 style: TextStyle(
                   fontSize: 24,
@@ -37,9 +37,9 @@ class PatientLoginView extends StatelessWidget {
               const SizedBox(height: 24),
               TextField(
                 controller: emailController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
-                  border: const OutlineInputBorder(),
+                  border:  OutlineInputBorder(),
                   prefixIcon: Icon(Icons.email, color: greenColor),
                 ),
                 keyboardType: TextInputType.emailAddress,
@@ -47,9 +47,9 @@ class PatientLoginView extends StatelessWidget {
               const SizedBox(height: 16),
               TextField(
                 controller: passwordController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password',
-                  border: const OutlineInputBorder(),
+                  border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.lock, color: greenColor),
                 ),
                 obscureText: true,

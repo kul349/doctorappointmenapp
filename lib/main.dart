@@ -1,6 +1,7 @@
 import 'package:doctorappointmenapp/controllers/BottomNavController.dart';
+import 'package:doctorappointmenapp/controllers/auth_controller.dart';
 import 'package:doctorappointmenapp/controllers/doctor_menu_controller.dart';
-import 'package:doctorappointmenapp/controllers/home_screen_navbar_controller.dart';
+import 'package:doctorappointmenapp/controllers/patient_getalldoctor_controller.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,9 +10,9 @@ import 'routes/app_routes.dart';
 void main() {
   // Initialize any necessary bindings (like controllers)
   Get.put(DoctorMenuController());
-  Get.put(HomeScreenNavbarController());
   Get.put(BottomNavController());
-
+  Get.put(AuthController());
+  Get.put(DoctorController());
   // Run the Flutter app
   runApp(const MyApp());
 }
