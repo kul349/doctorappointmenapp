@@ -1,5 +1,7 @@
 import 'package:doctorappointmenapp/controllers/patient_getalldoctor_controller.dart';
 import 'package:doctorappointmenapp/models/doctor/gride_model.dart';
+import 'package:doctorappointmenapp/themes/app_theme.dart';
+import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -74,24 +76,24 @@ class DoctorListPage extends StatelessWidget {
                           horizontal: 5,
                           vertical: 5), // Adjust padding as needed
                       decoration: BoxDecoration(
-                        color: Colors.yellow, // Background color
+                        color: kGreenColor,
                         borderRadius:
                             BorderRadius.circular(17), // Rounded corners
                       ),
                       child: Row(
                         children: [
                           Text(
-                            '${doctor.ratings}',
+                            '${doctor.averageRating}',
                             style: const TextStyle(
-                              fontSize: 24, // Font size for rating
-                              color: Colors.black, // Text color
+                              fontSize: 20, // Font size for rating
+                              color: Colors.white, // Text color
                             ),
                           ),
                           const SizedBox(width: 8),
                           const Icon(
                             Icons.star,
-                            color: Colors.black, // Icon color
-                            size: 33,
+                            color: Colors.white, // Icon color
+                            size: 28,
                           ),
                         ],
                       ),
