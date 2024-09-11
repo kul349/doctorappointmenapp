@@ -1,7 +1,7 @@
 import 'package:doctorappointmenapp/controllers/patient_getalldoctor_controller.dart';
 import 'package:doctorappointmenapp/models/doctor/gride_model.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
-import 'package:doctorappointmenapp/themes/app_theme.dart';
+import 'package:doctorappointmenapp/views/patient/doctor_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,7 +21,7 @@ class DoctorListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('$specialization Doctors'),
+        title: Text('$specialization'.toUpperCase()),
         centerTitle: true,
       ),
       body: Obx(() {
@@ -44,14 +44,15 @@ class DoctorListPage extends StatelessWidget {
             final DoctorModel doctor = doctorController.filteredDoctors[index];
 
             return Card(
+              color: kGreenLightColor,
               margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
               child: ListTile(
-                contentPadding: const EdgeInsets.only(left: 8.0, right: 2.0),
+                contentPadding: const EdgeInsets.only(left: 4.0, right: 4.0),
                 leading: CircleAvatar(
-                  radius: 30,
+                  radius: 45,
                   backgroundImage: doctor.avatar.isNotEmpty
                       ? NetworkImage(doctor.avatar)
                       : null,
@@ -66,7 +67,7 @@ class DoctorListPage extends StatelessWidget {
                       child: Text(
                         doctor.fullName,
                         style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 22, fontWeight: FontWeight.bold),
                         overflow: TextOverflow
                             .ellipsis, // Handle long names gracefully
                       ),
@@ -76,7 +77,7 @@ class DoctorListPage extends StatelessWidget {
                           horizontal: 5,
                           vertical: 5), // Adjust padding as needed
                       decoration: BoxDecoration(
-                        color: kGreenColor,
+                        color: kWhiteColor,
                         borderRadius:
                             BorderRadius.circular(17), // Rounded corners
                       ),
@@ -86,13 +87,13 @@ class DoctorListPage extends StatelessWidget {
                             '${doctor.averageRating}',
                             style: const TextStyle(
                               fontSize: 20, // Font size for rating
-                              color: Colors.white, // Text color
+                              color: Colors.black, // Text color
                             ),
                           ),
                           const SizedBox(width: 8),
                           const Icon(
                             Icons.star,
-                            color: Colors.white, // Icon color
+                            color: Colors.black, // Icon color
                             size: 28,
                           ),
                         ],
@@ -103,17 +104,25 @@ class DoctorListPage extends StatelessWidget {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 5),
-                    Text('${doctor.specialization}'),
+                    const SizedBox(height: 3),
+                    Text(
+                      '${doctor.specialization}',
+                      style: const TextStyle(fontSize: 20),
+                    ),
                     const SizedBox(height: 5),
 
                     Text(
-                        'Availability: ${doctor.availabilityStatus}'), // Display availability status
+                      'Availability: ${doctor.availabilityStatus}',
+                      style: const TextStyle(fontSize: 20),
+                    ), // Display availability status
                   ],
                 ),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
-                  // Handle tap if needed
+                  // Navigate to the DoctorDetailPage with the selected doctor
+                  Get.to(
+                    () => DoctorProfileDetails(),
+                    arguments: doctor, // Pass the DoctorModel object
+                  );
                 },
               ),
             );
