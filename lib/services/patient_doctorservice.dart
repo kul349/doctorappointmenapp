@@ -5,7 +5,8 @@ void fetchDoctors(String? specialization) async {
   String url = '$baseUrl/doctors'; // Replace with your backend API URL
 
   if (specialization != null && specialization != 'All') {
-    url += '?specialization=$specialization'; // Append specialization query parameter
+    url +=
+        '?specialization=$specialization'; // Append specialization query parameter
   }
 
   try {

@@ -4,6 +4,8 @@ class DoctorModel {
   final String email;
   final String doctorName;
   final String specialization;
+  final double ratings;  // Add this field
+  final String availabilityStatus;  // Add this field
 
   DoctorModel({
     required this.fullName,
@@ -11,6 +13,8 @@ class DoctorModel {
     required this.email,
     required this.doctorName,
     required this.specialization,
+    required this.ratings,  // Initialize here
+    required this.availabilityStatus,  // Initialize here
   });
 
   // Factory method to create a DoctorModel from JSON
@@ -21,6 +25,8 @@ class DoctorModel {
       email: json['email'] ?? '',
       doctorName: json['doctorName'] ?? '',
       specialization: json['specialization'] ?? '',
+      ratings: (json['ratings'] ?? 0).toDouble(),  // Parse the rating
+      availabilityStatus: json['availabilityStatus'] ?? 'unknown',  // Parse the availability status
     );
   }
 
@@ -32,6 +38,8 @@ class DoctorModel {
       'email': email,
       'doctorName': doctorName,
       'specialization': specialization,
+      'ratings': ratings,  // Convert rating to JSON
+      'availabilityStatus': availabilityStatus,  // Convert availability status to JSON
     };
   }
 }

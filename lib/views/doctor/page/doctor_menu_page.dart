@@ -1,4 +1,3 @@
-// doctor_list_page.dart
 import 'package:doctorappointmenapp/controllers/patient_getalldoctor_controller.dart';
 import 'package:doctorappointmenapp/models/doctor/gride_model.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +47,7 @@ class DoctorListPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: ListTile(
-                contentPadding: const EdgeInsets.all(16.0),
+                contentPadding: const EdgeInsets.only(left: 8.0, right: 2.0),
                 leading: CircleAvatar(
                   radius: 30,
                   backgroundImage: doctor.avatar.isNotEmpty
@@ -58,20 +57,56 @@ class DoctorListPage extends StatelessWidget {
                       ? const Icon(Icons.person, size: 30)
                       : null,
                 ),
-                title: Text(
-                  doctor.fullName,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        doctor.fullName,
+                        style: const TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                        overflow: TextOverflow
+                            .ellipsis, // Handle long names gracefully
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5,
+                          vertical: 5), // Adjust padding as needed
+                      decoration: BoxDecoration(
+                        color: Colors.yellow, // Background color
+                        borderRadius:
+                            BorderRadius.circular(17), // Rounded corners
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            '${doctor.ratings}',
+                            style: const TextStyle(
+                              fontSize: 24, // Font size for rating
+                              color: Colors.black, // Text color
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(
+                            Icons.star,
+                            color: Colors.black, // Icon color
+                            size: 33,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 5),
-                    Text('Username: ${doctor.doctorName}'),
+                    Text('${doctor.specialization}'),
                     const SizedBox(height: 5),
-                    Text('Specialization: ${doctor.specialization}'),
-                    const SizedBox(height: 5),
-                    Text('Email: ${doctor.email}'),
+
+                    Text(
+                        'Availability: ${doctor.availabilityStatus}'), // Display availability status
                   ],
                 ),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
