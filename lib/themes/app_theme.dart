@@ -23,6 +23,9 @@ const kGreyColor600 = Color(0xFFEAEAEA);
 const kGreyColor500 = Color(0xFFF6F6F6);
 const kGreyColor400 = Color(0x50CACCCF);
 const kYellowColor = Color(0xFFFFE848);
+const kpinkcolor = Color(0xFFECFEFF);
+
+const kpurplecolor = Color(0xFFEBEFF7);
 
 // theme textstyle
 TextStyle lightTextStyle =
