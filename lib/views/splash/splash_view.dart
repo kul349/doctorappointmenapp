@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../controllers/splash_controller.dart';
 
-class SplashView extends StatelessWidget {
-  final SplashController controller = Get.put(SplashController());
+class splashView extends StatelessWidget {
+  final splashController controller = Get.put(splashController());
 
   @override
   Widget build(BuildContext context) {

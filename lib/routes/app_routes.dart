@@ -11,9 +11,9 @@ import '../views/home_view.dart';
 
 class AppRoutes {
   // Define route names as static constants
-  static const SPLASH = '/';
+  static const splash = '/';
   static const HOME = '/home';
-  static const PATIENT_REGISTER = '/patient_register';
+  static const patientRegister = '/patientRegister';
   static const DOCTOR_REGISTER = '/doctor_register';
   static const DOCTOR_LOGIN = '/doctor_login';
   static const PATIENT_LOGIN = '/Patient_login';
@@ -25,15 +25,15 @@ class AppRoutes {
   // List of GetPages that defines the routes and their corresponding views
   static final routes = [
     GetPage(
-      name: SPLASH,
-      page: () => SplashView(),
+      name: splash,
+      page: () => splashView(),
     ),
     GetPage(
       name: HOME,
       page: () => const HomeView(),
     ),
     GetPage(
-      name: PATIENT_REGISTER,
+      name: patientRegister,
       page: () => const PatientRegisterView(),
     ),
     GetPage(

@@ -1,4 +1,5 @@
 class DoctorModel {
+  final String id;
   final String fullName;
   final String avatar;
   final String email;
@@ -8,21 +9,22 @@ class DoctorModel {
   final int totalRatings;
   final String availabilityStatus;
 
-  DoctorModel({
-    required this.fullName,
-    required this.avatar,
-    required this.email,
-    required this.doctorName,
-    required this.specialization,
-    required this.averageRating,
-    required this.totalRatings,
-    required this.availabilityStatus,
-  });
+  DoctorModel(
+      {required this.fullName,
+      required this.avatar,
+      required this.email,
+      required this.doctorName,
+      required this.specialization,
+      required this.averageRating,
+      required this.totalRatings,
+      required this.availabilityStatus,
+      required this.id});
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     final ratingsSummary = json['ratingsSummary'] ?? {};
-    
+
     return DoctorModel(
+      id: json['_id'] ?? "",
       fullName: json['fullName'] ?? '',
       avatar: json['avatar'] ?? '',
       email: json['email'] ?? '',
@@ -46,6 +48,7 @@ class DoctorModel {
         'totalRatings': totalRatings,
       },
       'availabilityStatus': availabilityStatus,
+      "_id": id
     };
   }
 }

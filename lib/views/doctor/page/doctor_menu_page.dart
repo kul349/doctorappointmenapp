@@ -115,10 +115,16 @@ class DoctorListPage extends StatelessWidget {
                       'Availability: ${doctor.availabilityStatus}',
                       style: const TextStyle(fontSize: 20),
                     ), // Display availability status
+                    Text(
+                      'doctorId: ${doctor.id}',
+                      style: const TextStyle(fontSize: 20),
+                    ),
                   ],
                 ),
                 onTap: () {
                   // Navigate to the DoctorDetailPage with the selected doctor
+                  print(
+                      'Navigating to DoctorProfileDetails with doctor: ${doctor.id}');
                   Get.to(
                     () => DoctorProfileDetails(),
                     arguments: doctor, // Pass the DoctorModel object

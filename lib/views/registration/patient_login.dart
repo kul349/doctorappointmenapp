@@ -39,7 +39,7 @@ class PatientLoginView extends StatelessWidget {
                 controller: emailController,
                 decoration: const InputDecoration(
                   labelText: 'Email',
-                  border:  OutlineInputBorder(),
+                  border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.email, color: greenColor),
                 ),
                 keyboardType: TextInputType.emailAddress,
@@ -85,7 +85,7 @@ class PatientLoginView extends StatelessWidget {
               const SizedBox(height: 80),
               Center(
                 child: TextButton(
-                  onPressed: () => Get.toNamed(AppRoutes.PATIENT_REGISTER),
+                  onPressed: () => Get.toNamed(AppRoutes.patientRegister),
                   child: Text(
                     'Don\'t have an account? Register',
                     style:
