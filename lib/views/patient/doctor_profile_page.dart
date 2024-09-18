@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:doctorappointmenapp/models/doctor/gride_model.dart';
 import 'package:doctorappointmenapp/controllers/doctor_profile_controller.dart';
+import 'package:intl/intl.dart';
 
 class DoctorProfileDetails extends StatefulWidget {
   const DoctorProfileDetails({super.key});
@@ -20,8 +21,8 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
     DoctorProfileController(Get.arguments as DoctorModel),
   );
 
-  var selectedDate = DateTime.now().obs; // Observable selected date
-  var selectedTime = DateTime.now().obs; // Observable for selected time
+  var selectedDate = DateTime.now().obs; // Observable for selected date
+  var selectedTime = TimeOfDay.now().obs; // Observable for selected time
 
   @override
   void initState() {
@@ -33,15 +34,17 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
 
     print('Initializing TimeSlotController with Doctor ID: $doctorId');
 
+    // Initializing the TimeSlotController with doctorId
     Get.put(TimeSlotController(doctorId));
   }
 
   void updateSelectedDate(DateTime date) {
     selectedDate.value = date;
-  }
 
-  void updateSelectedTime(DateTime time) {
-    selectedTime.value = time;
+    // Fetch available slots whenever the date changes
+    final TimeSlotController timeSlotController =
+        Get.find<TimeSlotController>();
+    timeSlotController.fetchAvailableTimeSlots(date);
   }
 
   @override
@@ -63,6 +66,30 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
                   const SizedBox(height: 8),
                   _buildDateTimeline(),
                   const SizedBox(height: 8),
+                  buildTimeSlotPicker(), // Time slot picker
+                  const SizedBox(height: 10),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Add booking logic here
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.green,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        "Book Appointment",
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
@@ -142,16 +169,17 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: const Padding(
-          padding: EdgeInsets.all(18.0),
-          child: Column(
-            children: [
-              Text("PATIENT",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              Text("1000+",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              (Icon(Icons.people_alt))
-            ],
-          )),
+        padding: EdgeInsets.all(18.0),
+        child: Column(
+          children: [
+            Text("PATIENT",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text("1000+",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Icon(Icons.people_alt),
+          ],
+        ),
+      ),
     );
   }
 
@@ -217,10 +245,6 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
           'Dr. ${controller.doctor.fullName} is a highly skilled ${controller.doctor.specialization}.',
           style: const TextStyle(fontSize: 18),
         ),
-        Text(
-          'Dr. ${controller.doctor.id} is a highly skilled ${controller.doctor.specialization}.',
-          style: const TextStyle(fontSize: 18),
-        ),
       ],
     );
   }
@@ -231,165 +255,113 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
       margin: const EdgeInsets.all(10),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Padding(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            "Choose date",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8.0),
-          child: DatePicker(
-            DateTime.now(),
-            height: 95,
-            width: 82,
-            initialSelectedDate: DateTime.now(),
-            selectedTextColor: whiteColor,
-            selectionColor: Colors.green,
-            onDateChange: (date) {
-              updateSelectedDate(date);
-              print(date);
-            },
-          ),
-        ),
-        const Text(
-          "Choose Time",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-        ),
-        buildTimeSlotPicker(),
-        const SizedBox(height: 10),
-        Center(
-          child: ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.green,
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: const Text(
-              "Book Appointment",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              "Choose date",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
-        ),
-        const SizedBox(height: 30),
-      ]),
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            child: DatePicker(
+              DateTime.now(),
+              height: 95,
+              width: 82,
+              initialSelectedDate: DateTime.now(),
+              selectedTextColor: Colors.white,
+              selectionColor: Colors.green,
+              onDateChange: (date) {
+                updateSelectedDate(date);
+                print("Selected Date: $date");
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  // Widget for Time Slot Picker
+  // Time slot picker widget
   Widget buildTimeSlotPicker() {
-    final TimeSlotController timeSlotController =
-        Get.find<TimeSlotController>();
-
-    List<TimeOfDay> timeSlots = generateTimeSlots(
-      TimeOfDay(hour: 9, minute: 0),
-      TimeOfDay(hour: 17, minute: 0),
-    );
-
-    bool allSlotsTaken = timeSlotController.allTimeSlotsTaken(timeSlots);
-
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: allSlotsTaken
-          ? Center(
-              child: Text(
-                'All time slots are taken',
-                style: TextStyle(color: Colors.red, fontSize: 18),
-              ),
-            )
-          : SizedBox(
-              height: 500,
-              child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: timeSlots.length,
-                itemBuilder: (context, index) {
-                  final slot = timeSlots[index];
-                  return Obx(() {
-                    final isSelected =
-                        slot == timeSlotController.selectedTime.value;
-                    final isTaken =
-                        timeSlotController.takenTimeSlots.contains(slot);
+      child: Obx(() {
+        final TimeSlotController timeSlotController =
+            Get.find<TimeSlotController>();
+        List<TimeOfDay> availableSlots = timeSlotController.availableTimeSlots;
+        List<TimeOfDay> takenSlots = timeSlotController.takenTimeSlots;
 
-                    return GestureDetector(
-                      onTap: isTaken
-                          ? null
-                          : () {
-                              timeSlotController.updateSelectedTime(slot);
-                            },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: isTaken
-                              ? Colors.red
-                              : isSelected
-                                  ? Colors.green
-                                  : Colors.grey[200],
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: isSelected ? Colors.green : Colors.grey),
-                        ),
-                        child: Center(
-                          child: Text(
-                            formatTimeOfDay(slot),
-                            style: TextStyle(
-                              color: isSelected || isTaken
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  });
-                },
-              ),
+        if (availableSlots.isEmpty && takenSlots.isEmpty) {
+          return Center(
+            child: const Text(
+              'No available time slots for the selected date',
+              style: TextStyle(color: Colors.red, fontSize: 18),
             ),
+          );
+        }
+
+        return SizedBox(
+          height: 500,
+          child: GridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+            ),
+            itemCount: availableSlots.length,
+            itemBuilder: (context, index) {
+              final slot = availableSlots[index];
+              final isTaken = takenSlots.contains(slot);
+              final isSelected = slot == timeSlotController.selectedTime.value;
+
+              return GestureDetector(
+                onTap: isTaken
+                    ? null // Disable if slot is taken
+                    : () {
+                        timeSlotController.updateSelectedTime(slot);
+                      },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: isTaken
+                        ? Colors.red // Taken slot color
+                        : isSelected
+                            ? Colors.green // Selected slot color
+                            : Colors.grey[200], // Available slot color
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: isSelected ? Colors.green : Colors.grey,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      formatTimeOfDay(slot),
+                      style: TextStyle(
+                        color:
+                            isTaken || isSelected ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      }),
     );
-  }
-
-  // Generate time slots based on start and end times
-  List<TimeOfDay> generateTimeSlots(TimeOfDay startTime, TimeOfDay endTime) {
-    List<TimeOfDay> slots = [];
-    TimeOfDay current = startTime;
-
-    while (current.hour < endTime.hour ||
-        (current.hour == endTime.hour && current.minute < endTime.minute)) {
-      slots.add(current);
-      int nextMinute = current.minute + 30;
-      int nextHour = current.hour;
-
-      if (nextMinute >= 60) {
-        nextMinute -= 60;
-        nextHour++;
-      }
-
-      if (nextHour >= 24) {
-        break; // Prevent going beyond 24 hours
-      }
-
-      current = TimeOfDay(hour: nextHour, minute: nextMinute);
-    }
-
-    return slots;
   }
 
   // Helper function to format TimeOfDay
-  String formatTimeOfDay(TimeOfDay timeOfDay) {
-    return MaterialLocalizations.of(Get.context!).formatTimeOfDay(
-      timeOfDay,
-      alwaysUse24HourFormat: false,
-    );
+  String formatTimeOfDay(TimeOfDay time) {
+    final now = DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    final format = DateFormat.jm(); // '6:00 PM'
+    return format.format(dt);
   }
 }
