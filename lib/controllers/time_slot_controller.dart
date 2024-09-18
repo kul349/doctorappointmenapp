@@ -1,19 +1,16 @@
+import 'package:doctorappointmenapp/services/time_slot_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:doctorappointmenapp/utils/constant.dart';
+import 'package:intl/intl.dart';
 
 class TimeSlotController extends GetxController {
   final String doctorId;
 
   TimeSlotController(this.doctorId) {
     if (doctorId.isEmpty) {
-      print("Doctor ID cannot be empty");
       throw ArgumentError('Doctor ID cannot be empty');
     }
-    print(
-        "TimeSlotController initialized with Doctor ID before passing url: $doctorId");
+    print("TimeSlotController initialized with Doctor ID: $doctorId");
   }
 
   // Selected time observable
@@ -28,57 +25,49 @@ class TimeSlotController extends GetxController {
   // Set of selected time slots
   final Set<TimeOfDay> _selectedTimeSlots = {};
 
-  // Fetch available time slots and taken time slots from the backend
+  // Fetch available and taken time slots using the TimeSlotService
   Future<void> fetchAvailableTimeSlots(DateTime selectedDate) async {
-    print("fetchAvailableTimeSlots method called");
-
-    String formattedDate =
-        "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
-    final url = Uri.parse(
-      '$baseUrl/appointment/getAvailableTimeSlots/$doctorId?date=$formattedDate',
-    );
-
-    print("Request URL: $url"); // Print URL for debugging
-    print("Doctor ID: $doctorId"); // Debugging output
-
     try {
-      final response = await http.get(url);
+      print("Fetching time slots for Doctor ID: $doctorId on $selectedDate");
 
-      print(
-          "Status Code: ${response.statusCode}"); // Print status code for debugging
+      final result =
+          await TimeSlotService.getAvailableTimeSlots(doctorId, selectedDate);
 
-      if (response.statusCode == 200) {
-        print("Response body: ${response.body}");
-        final data = jsonDecode(response.body);
-        print("Decoded data: $data");
+      List<TimeOfDay> fetchedAvailableSlots = [];
+      List<TimeOfDay> fetchedTakenSlots = [];
 
-        List<TimeOfDay> fetchedTimeSlots = [];
-        List<TimeOfDay> fetchedTakenSlots = [];
-
-        if (data['availableSlots'] != null) {
-          for (var slot in data['availableSlots']) {
-            final startTime = DateTime.parse(slot['startTime']).toLocal();
-            fetchedTimeSlots
-                .add(TimeOfDay(hour: startTime.hour, minute: startTime.minute));
-          }
+      // Safely handle availableSlots (null check)
+      if (result['availableSlots'] != null) {
+        for (var slot in result['availableSlots']!) {
+          final startTime = DateTime.parse(slot['startTime']).toLocal();
+          fetchedAvailableSlots
+              .add(TimeOfDay(hour: startTime.hour, minute: startTime.minute));
         }
+      }
 
-        if (data['takenSlots'] != null) {
-          for (var takenSlot in data['takenSlots']) {
-            final startTime = DateTime.parse(takenSlot['startTime']).toLocal();
-            fetchedTakenSlots
-                .add(TimeOfDay(hour: startTime.hour, minute: startTime.minute));
-          }
+      // Safely handle takenSlots (null check)
+      if (result['takenSlots'] != null) {
+        for (var takenSlot in result['takenSlots']!) {
+          final startTime = DateTime.parse(takenSlot['startTime']).toLocal();
+          fetchedTakenSlots
+              .add(TimeOfDay(hour: startTime.hour, minute: startTime.minute));
         }
+      }
 
-        availableTimeSlots.assignAll(fetchedTimeSlots);
-        takenTimeSlots.assignAll(fetchedTakenSlots);
-      } else {
-        Get.snackbar("Error",
-            "Failed to fetch time slots. Status code: ${response.statusCode}");
+      // Assign fetched data to the respective observables
+      availableTimeSlots.assignAll(fetchedAvailableSlots);
+      takenTimeSlots.assignAll(fetchedTakenSlots);
+
+      print("Available Slots: $fetchedAvailableSlots");
+      print("Taken Slots: $fetchedTakenSlots");
+
+      // Check if there are no available time slots
+      if (availableTimeSlots.isEmpty) {
+        Get.snackbar("Info", "No available time slots for the selected date.");
       }
     } catch (e) {
       Get.snackbar("Error", "Error fetching time slots: $e");
+      print(e);
     }
   }
 
@@ -88,7 +77,7 @@ class TimeSlotController extends GetxController {
     print("Selected Time: $newTime");
   }
 
-  // Convert TimeOfDay to DateTime
+  // Convert TimeOfDay to DateTime (optional date parameter for specific date)
   DateTime timeOfDayToDateTime(TimeOfDay timeOfDay, {DateTime? dateTime}) {
     if (dateTime != null) {
       return DateTime(dateTime.year, dateTime.month, dateTime.day,
@@ -112,15 +101,22 @@ class TimeSlotController extends GetxController {
     } else {
       _selectedTimeSlots.add(timeOfDay);
     }
-    update(); // Notify listeners
+    update(); // Notify listeners to update the UI
   }
 
   // Get selected time slots
   List<TimeOfDay> get selectedTimeSlots => _selectedTimeSlots.toList();
 
-  // Check if all time slots are taken
-  bool allTimeSlotsTaken(List<TimeOfDay> timeSlots) {
-    return availableTimeSlots.isEmpty ||
-        availableTimeSlots.length == timeSlots.length;
+  // Check if all available slots are taken
+  bool allTimeSlotsTaken() {
+    return availableTimeSlots.isEmpty;
+  }
+
+  // Format TimeOfDay to a readable string (e.g., "6:30 PM")
+  String formatTimeOfDay(TimeOfDay time) {
+    final now = DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    final format = DateFormat.jm(); // 6:00 PM
+    return format.format(dt);
   }
 }
