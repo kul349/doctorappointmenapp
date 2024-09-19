@@ -1,4 +1,3 @@
-// views/patient/doctor_profile_details.dart
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:doctorappointmenapp/controllers/time_slot_controller.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
@@ -16,26 +15,43 @@ class DoctorProfileDetails extends StatefulWidget {
 }
 
 class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
-  // Initializing the GetX controller with the doctor model
   final DoctorProfileController controller = Get.put(
     DoctorProfileController(Get.arguments as DoctorModel),
   );
 
   var selectedDate = DateTime.now().obs; // Observable for selected date
   var selectedTime = TimeOfDay.now().obs; // Observable for selected time
-
   @override
   void initState() {
     super.initState();
 
-    // Ensure that DoctorProfileController is initialized with the correct doctor
     final doctorModel = Get.arguments as DoctorModel;
     final doctorId = doctorModel.id;
 
     print('Initializing TimeSlotController with Doctor ID: $doctorId');
-
-    // Initializing the TimeSlotController with doctorId
     Get.put(TimeSlotController(doctorId));
+
+    final TimeSlotController timeSlotController =
+        Get.find<TimeSlotController>();
+    timeSlotController.fetchAvailableTimeSlots(selectedDate.value);
+  }
+
+  List<Map<String, String>> convertTimeOfDayListToMapList(
+      List<TimeOfDay> timeOfDayList) {
+    return timeOfDayList.map((timeOfDay) => timeOfDayToMap(timeOfDay)).toList();
+  }
+
+  Map<String, String> timeOfDayToMap(TimeOfDay timeOfDay) {
+    final now = DateTime.now();
+    final startTime = DateTime(
+        now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
+    final format = DateFormat('yyyy-MM-ddTHH:mm:ss')
+        .format(startTime); // ISO 8601 format for the API
+
+    return {
+      'startTime': format,
+      'endTime': format, // Adjust this if needed
+    };
   }
 
   void updateSelectedDate(DateTime date) {
@@ -65,13 +81,19 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
                   _buildDoctorCard(),
                   const SizedBox(height: 8),
                   _buildDateTimeline(),
-                  const SizedBox(height: 8),
-                  buildTimeSlotPicker(), // Time slot picker
                   const SizedBox(height: 10),
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
-                        // Add booking logic here
+                        final TimeSlotController timeSlotController =
+                            Get.find<TimeSlotController>();
+                        final selectedTime =
+                            timeSlotController.selectedTime.value;
+                        if (selectedTime != null) {
+                          // Proceed with booking logic
+                          print(
+                              "Booking appointment at $selectedTime on ${selectedDate.value}");
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -139,7 +161,7 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        ' ${controller.doctor.specialization}',
+                        controller.doctor.specialization,
                         style: const TextStyle(fontSize: 20),
                       ),
                       Row(
@@ -280,6 +302,16 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
               },
             ),
           ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text("Choose Time",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                )),
+          ),
+          const SizedBox(height: 8),
+          buildTimeSlotPicker(),
         ],
       ),
     );
@@ -293,11 +325,24 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
         final TimeSlotController timeSlotController =
             Get.find<TimeSlotController>();
         List<TimeOfDay> availableSlots = timeSlotController.availableTimeSlots;
-        List<TimeOfDay> takenSlots = timeSlotController.takenTimeSlots;
+        List<TimeOfDay> takenSlots = timeSlotController.takenTimeSlots
+            .toList(); // Convert RxList to List
 
+        // Convert takenSlots to List<Map<String, String>>
+        List<Map<String, String>> takenSlotsMap =
+            convertTimeOfDayListToMapList(takenSlots);
+
+        // Reset the selected time if date changes
+        if (availableSlots.isNotEmpty &&
+            timeSlotController.selectedTime.value == null) {
+          // Select the first available slot if no time is currently selected
+          timeSlotController.updateSelectedTime(availableSlots.first);
+        }
+
+        // If no slots are available, show a message
         if (availableSlots.isEmpty && takenSlots.isEmpty) {
-          return Center(
-            child: const Text(
+          return const Center(
+            child: Text(
               'No available time slots for the selected date',
               style: TextStyle(color: Colors.red, fontSize: 18),
             ),
@@ -317,13 +362,31 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
             itemCount: availableSlots.length,
             itemBuilder: (context, index) {
               final slot = availableSlots[index];
-              final isTaken = takenSlots.contains(slot);
+              final isTaken = takenSlots.any((slotTime) {
+                // Convert TimeOfDay to DateTime for comparison
+                final slotDateTime = DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
+                  slotTime.hour,
+                  slotTime.minute,
+                );
+
+                // Check if the slotDateTime falls within the taken time slots
+                return takenSlotsMap.any((slotMap) {
+                  final startTime = DateTime.parse(slotMap['startTime']!);
+                  final endTime = DateTime.parse(slotMap['endTime']!);
+                  return slotDateTime.isAfter(startTime) &&
+                      slotDateTime.isBefore(endTime);
+                });
+              });
               final isSelected = slot == timeSlotController.selectedTime.value;
 
               return GestureDetector(
                 onTap: isTaken
                     ? null // Disable if slot is taken
                     : () {
+                        // Update selected time slot and handle color changes
                         timeSlotController.updateSelectedTime(slot);
                       },
                 child: Container(

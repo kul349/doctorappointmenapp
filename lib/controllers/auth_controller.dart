@@ -1,5 +1,4 @@
 // auth_controller.dart
-import 'dart:io';
 
 import 'package:doctorappointmenapp/models/patient/patient_model.dart';
 import 'package:doctorappointmenapp/routes/app_routes.dart';
@@ -12,6 +11,16 @@ class AuthController extends GetxController {
   final TokenService _tokenService =
       TokenService(); // Add TokenService instance
   Rx<UserModel?> userModel = Rx<UserModel?>(null);
+
+  Future<void> checkUserLoginStatus() async {
+    final token = await _tokenService.getToken();
+    if (token != null && token.isNotEmpty) {
+      print('token found:$token');
+      Get.offAllNamed(AppRoutes.HOMESCREEN);
+    } else {
+      Get.offAllNamed(AppRoutes.HOME);
+    }
+  }
 
   Future<void> loginUser(String email, String password) async {
     try {
