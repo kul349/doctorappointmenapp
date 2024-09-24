@@ -43,6 +43,7 @@ class AuthService {
           final userJson =
               data['data']?['user'] ?? {}; // Safely parse the user data
           return UserModel.fromJson(userJson); // Return the parsed user model
+          
         } else {
           print('Access token is null or empty'); // Debugging line
           return null;

@@ -11,6 +11,8 @@ class AuthController extends GetxController {
   final TokenService _tokenService =
       TokenService(); // Add TokenService instance
   Rx<UserModel?> userModel = Rx<UserModel?>(null);
+  var patientId =
+      ''.obs; // Add this line to create an observable for patient ID
 
   Future<void> checkUserLoginStatus() async {
     final token = await _tokenService.getToken();
@@ -28,6 +30,7 @@ class AuthController extends GetxController {
 
       if (user != null) {
         userModel.value = user;
+        patientId.value = user.patientId; // Store patient ID
         // Retrieve and print the token to confirm it was stored
         final token = await _tokenService.getToken();
         if (token == null || token.isEmpty) {

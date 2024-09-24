@@ -1,5 +1,9 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:doctorappointmenapp/controllers/auth_controller.dart';
 import 'package:doctorappointmenapp/controllers/time_slot_controller.dart';
+import 'package:doctorappointmenapp/routes/app_routes.dart';
+import 'package:doctorappointmenapp/services/bookappointment.dart';
+import 'package:doctorappointmenapp/services/token_service.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +22,7 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
   final DoctorProfileController controller = Get.put(
     DoctorProfileController(Get.arguments as DoctorModel),
   );
+  final AuthController authController = Get.find<AuthController>();
 
   var selectedDate = DateTime.now().obs; // Observable for selected date
   var selectedTime = TimeOfDay.now().obs; // Observable for selected time
@@ -84,15 +89,56 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
                   const SizedBox(height: 10),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         final TimeSlotController timeSlotController =
                             Get.find<TimeSlotController>();
                         final selectedTime =
                             timeSlotController.selectedTime.value;
                         if (selectedTime != null) {
                           // Proceed with booking logic
-                          print(
-                              "Booking appointment at $selectedTime on ${selectedDate.value}");
+                          final tokenService = TokenService();
+                          String? token = await tokenService.getToken();
+                          print("token for appointment:$token");
+                          if (token != null) {
+                            String formattedDate = DateFormat('yyyy-MM-dd')
+                                .format(selectedDate.value);
+// Convert TimeOfDay to a string in HH:mm format
+                            String formattedTimeSlot =
+                                "${selectedTime.hour}:${selectedTime.minute.toString().padLeft(2, '0')}";
+
+// Log the values before booking
+                            print(
+                                'Patient ID: ${authController.patientId.value}');
+                            print('Doctor ID: ${controller.doctor.id}');
+                            print('Formatted Date: $formattedDate');
+                            print('Formatted Time Slot: $formattedTimeSlot');
+
+                            try {
+                              await bookAppointment(
+                                  token: token,
+                                  patientId: authController.patientId.value,
+                                  doctorId: controller.doctor.id,
+                                  date: formattedDate,
+                                  startTime: formattedTimeSlot);
+                              print(
+                                  "Booking appointment at $selectedTime on ${selectedDate.value}");
+                              print(authController.patientId);
+                              print("Navigating to Appointment View");
+
+                              Get.toNamed(AppRoutes.APPOINTMENTVIEW,
+                                  arguments: {
+                                    'doctorId': controller.doctor.id,
+                                    'date': formattedDate,
+                                    'startTime': formattedTimeSlot,
+                                  });
+                            } catch (e) {
+                              print(
+                                "bad error:$e",
+                              );
+                            }
+                          } else {
+                            Get.snackbar("Error", "You have to login ");
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(
