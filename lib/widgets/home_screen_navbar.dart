@@ -26,7 +26,7 @@ class HomeScreenNavbar extends StatelessWidget {
         ),
         Obx(() {
           final avatarUrl = authController.userModel.value?.avatar ?? '';
-          final defaultImage =
+          const defaultImage =
               'https://media.istockphoto.com/id/1805954358/photo/hr-human-resources-recruitment-team-staff-management-business-concept-relationship-management.jpg?s=1024x1024&w=is&k=20&c=sQtdh8xmzErxaFTWqgX5UTC4lEJqnn7ejQyEnN7aVlQ=';
 
           return PopupMenuButton<String>(

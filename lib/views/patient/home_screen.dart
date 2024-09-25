@@ -1,14 +1,18 @@
+import 'package:doctorappointmenapp/controllers/top_doctor_controller.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:doctorappointmenapp/views/patient/navigation_botton.dart'; // Ensure correct import
 import 'package:doctorappointmenapp/widgets/doctor_app_grid_menu.dart';
 import 'package:doctorappointmenapp/widgets/home_screen_navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final TopDoctorController doctorController = Get.put(TopDoctorController());
+
     return Scaffold(
       body: Column(
         children: [
@@ -21,57 +25,42 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     HomeScreenNavbar(),
-                    const SizedBox(
-                      height: 30,
-                    ),
+                    const SizedBox(height: 30),
                     RichText(
                       text: TextSpan(
                         style: Theme.of(context).textTheme.displaySmall,
                         children: <TextSpan>[
-                          const TextSpan(
-                            text: 'Find ',
-                          ),
+                          const TextSpan(text: 'Find '),
                           TextSpan(
                             text: 'your doctor',
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
-                                .copyWith(
-                                  color: kGreyColor900,
-                                ),
+                                .copyWith(color: kGreyColor900),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 24,
-                    ),
+                    const SizedBox(height: 24),
                     Container(
                       height: 56,
                       padding: const EdgeInsets.only(
-                        right: 8,
-                        left: 16,
-                        bottom: 5,
-                        top: 6,
-                      ),
+                          right: 8, left: 16, bottom: 5, top: 6),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         color: kGreyColor500,
                       ),
                       child: TextField(
-                        style:
-                            Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                  color: kBlackColor900,
-                                ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(color: kBlackColor900),
                         cursorHeight: 24,
                         decoration: InputDecoration(
-                          suffixIcon: const Icon(
-                            Icons.search,
-                            color: kBlackColor900,
-                          ),
-                          suffixIconConstraints: const BoxConstraints(
-                            maxHeight: 24,
-                          ),
+                          suffixIcon:
+                              const Icon(Icons.search, color: kBlackColor900),
+                          suffixIconConstraints:
+                              const BoxConstraints(maxHeight: 24),
                           hintText: 'Search doctor, medicines etc',
                           hintStyle: Theme.of(context).textTheme.headlineSmall,
                           contentPadding: const EdgeInsets.only(bottom: 5),
@@ -79,33 +68,34 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 24,
-                    ),
+                    const SizedBox(height: 24),
                     DoctorAppGridMenu(),
-                    const SizedBox(
-                      height: 24,
-                    ),
+                    const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Top Doctors',
-                          style: Theme.of(context).textTheme.bodyLarge,
+                        Text('Top Doctors',
+                            style: Theme.of(context).textTheme.bodyLarge),
+                        GestureDetector(
+                          onTap: () {
+                            doctorController
+                                .toggleShowAll(); // Toggle between showing all and a few doctors
+                          },
+                          child: Obx(() => Text(
+                                doctorController.showAll.value
+                                    ? 'Show Less'
+                                    : 'See All',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .copyWith(color: kBlueColor),
+                              )),
                         ),
-                        Text(
-                          'View all',
-                          style:
-                              Theme.of(context).textTheme.labelLarge!.copyWith(
-                                    color: kBlueColor,
-                                  ),
-                        )
                       ],
                     ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    // Add more widgets as needed
+                    const SizedBox(height: 24),
+                    // Display horizontally scrollable list of doctors
+                    _buildTopDoctorsList(doctorController),
                   ],
                 ),
               ),
@@ -116,5 +106,79 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildTopDoctorsList(TopDoctorController doctorController) {
+    return Obx(() {
+      final displayDoctors = doctorController.showAll.value
+          ? doctorController.doctors.take(11).toList()
+          : doctorController.doctors.take(4).toList();
+
+      return SizedBox(
+        height: 250,
+        // Set a fixed height for the horizontal list
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: displayDoctors.length,
+          itemBuilder: (context, index) {
+            final doctor = displayDoctors[index];
+            return Card(
+              margin: const EdgeInsets.only(right: 10),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: CircleAvatar(
+                          radius: 60,
+                          child: Image.network(doctor.avatar,
+                              height: 80, width: 80),
+                        ),
+                      ),
+                    ), // Doctor's image
+                    const SizedBox(height: 8),
+                    Expanded(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Dr ${doctor.fullName}",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20)),
+                        const SizedBox(height: 4),
+                        Text(
+                          doctor.specialization,
+                          style: const TextStyle(fontSize: 20),
+                          textAlign: TextAlign.left,
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.star,
+                              color: kYellowColor,
+                              size: 30,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              ' ${doctor.averageRating.toStringAsFixed(1)}',
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ],
+                        )
+                      ],
+                    ))
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    });
   }
 }
