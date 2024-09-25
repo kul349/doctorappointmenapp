@@ -49,6 +49,7 @@ dependencies:
   date_picker_timeline: 1.2.3
   time_slot: ^0.0.2
   intl: ^0.17.0
+  flutter_rating_bar: ^4.0.1
  
 
 

@@ -1,5 +1,6 @@
 import 'package:doctorappointmenapp/views/notification/notification.dart';
 import 'package:doctorappointmenapp/views/patient/appointment.dart';
+import 'package:doctorappointmenapp/views/patient/get_ratting_page.dart';
 import 'package:doctorappointmenapp/views/patient/home_screen.dart';
 import 'package:doctorappointmenapp/views/registration/doctor_login.dart';
 import 'package:doctorappointmenapp/views/registration/patient_login.dart';
@@ -21,7 +22,7 @@ class AppRoutes {
   static const APPOINTMENTVIEW = '/apointmentsview';
   static const NOTIFICATION =
       '/notifications'; // Remove the space before 'notifications'
-
+  static const addRating = '/addRating';
   // List of GetPages that defines the routes and their corresponding views
   static final routes = [
     GetPage(
@@ -58,7 +59,13 @@ class AppRoutes {
     ),
     GetPage(
       name: APPOINTMENTVIEW,
-      page: () => const AppointmentView(),
+      page: () => AppointmentView(),
     ),
+    GetPage(
+      name: addRating,
+      page: () => RatingPage(
+        doctorId: Get.arguments['doctorId'],
+      ), // Pass the doctorId
+    )
   ];
 }

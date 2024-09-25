@@ -84,7 +84,7 @@ class DoctorListPage extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            '${doctor.averageRating}',
+                            '${doctor.averageRating.toStringAsFixed(1)}',
                             style: const TextStyle(
                               fontSize: 20, // Font size for rating
                               color: Colors.black, // Text color

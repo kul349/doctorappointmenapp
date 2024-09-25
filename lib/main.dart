@@ -2,7 +2,6 @@ import 'package:doctorappointmenapp/controllers/BottomNavController.dart';
 import 'package:doctorappointmenapp/controllers/auth_controller.dart';
 import 'package:doctorappointmenapp/controllers/doctor_menu_controller.dart';
 import 'package:doctorappointmenapp/controllers/patient_getalldoctor_controller.dart';
-import 'package:doctorappointmenapp/controllers/time_slot_controller.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

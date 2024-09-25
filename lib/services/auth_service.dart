@@ -43,7 +43,6 @@ class AuthService {
           final userJson =
               data['data']?['user'] ?? {}; // Safely parse the user data
           return UserModel.fromJson(userJson); // Return the parsed user model
-          
         } else {
           print('Access token is null or empty'); // Debugging line
           return null;
@@ -61,10 +60,21 @@ class AuthService {
   // Function to log out and remove the token
   Future<void> logout() async {
     try {
-      await _tokenService.removeToken(); // Remove the token from secure storage
-      print('Successfully logged out');
+      final token = await _tokenService.getToken();
+      final response = await http.post(Uri.parse("$baseUrl/Users/logout"),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json'
+          });
+      print('Logout response status: ${response.statusCode}');
+      print('Logout response body: ${response.body}');
+      if (response.statusCode == 200) {
+        _tokenService.removeToken();
+        print("Successfully logout from backend and app");
+      }
     } catch (e) {
-      print('An error occurred during logout: $e');
+      print('An error occurred during backend logout: $e');
+      throw Exception('Error during logout');
     }
   }
 }

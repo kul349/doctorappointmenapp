@@ -122,15 +122,16 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
                                   startTime: formattedTimeSlot);
                               print(
                                   "Booking appointment at $selectedTime on ${selectedDate.value}");
-                              print(authController.patientId);
-                              print("Navigating to Appointment View");
+                              print(authController.patientId.value);
+                              print("Navigating to Rating page");
 
-                              Get.toNamed(AppRoutes.APPOINTMENTVIEW,
-                                  arguments: {
-                                    'doctorId': controller.doctor.id,
-                                    'date': formattedDate,
-                                    'startTime': formattedTimeSlot,
-                                  });
+                              Get.toNamed(
+                                AppRoutes.addRating,
+                                arguments: {
+                                  'doctorId': controller.doctor.id,
+                                  "patientId": authController.patientId.value
+                                },
+                              );
                             } catch (e) {
                               print(
                                 "bad error:$e",
