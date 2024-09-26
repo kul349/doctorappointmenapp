@@ -31,6 +31,8 @@ class AuthController extends GetxController {
       if (user != null) {
         userModel.value = user;
         patientId.value = user.patientId; // Store patient ID
+        print('Patient ID after login: ${patientId.value}');
+
         // Retrieve and print the token to confirm it was stored
         final token = await _tokenService.getToken();
         if (token == null || token.isEmpty) {

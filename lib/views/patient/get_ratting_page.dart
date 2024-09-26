@@ -83,7 +83,7 @@ class RatingPage extends StatelessWidget {
                             if (authController.patientId.value.isEmpty) {
                               // Display an error if patientId is empty
                               ratingController.errorMessage.value =
-                                  "Error: Patient ID is missing.";
+                                  "Error: Patient ID is missing while submiting.";
                               return;
                             }
 

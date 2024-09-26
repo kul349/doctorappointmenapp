@@ -1,5 +1,7 @@
+import 'package:doctorappointmenapp/controllers/search_doctor_controller.dart';
 import 'package:doctorappointmenapp/controllers/top_doctor_controller.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
+import 'package:doctorappointmenapp/views/patient/doctor_profile_page.dart';
 import 'package:doctorappointmenapp/views/patient/navigation_botton.dart'; // Ensure correct import
 import 'package:doctorappointmenapp/widgets/doctor_app_grid_menu.dart';
 import 'package:doctorappointmenapp/widgets/home_screen_navbar.dart';
@@ -12,6 +14,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TopDoctorController doctorController = Get.put(TopDoctorController());
+    final DoctorSearchController searchController =
+        Get.put(DoctorSearchController()); // Search controller
 
     return Scaffold(
       body: Column(
@@ -42,6 +46,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24),
+                    // Search Box
                     Container(
                       height: 56,
                       padding: const EdgeInsets.only(
@@ -51,6 +56,12 @@ class HomeScreen extends StatelessWidget {
                         color: kGreyColor500,
                       ),
                       child: TextField(
+                        onChanged: (query) {
+                          // Trigger search whenever the text changes
+                          searchController.searchDoctors(
+                            query,
+                          ); // You can pass specialization if needed
+                        },
                         style: Theme.of(context)
                             .textTheme
                             .headlineSmall!
@@ -94,8 +105,18 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    // Display horizontally scrollable list of doctors
-                    _buildTopDoctorsList(doctorController),
+                    // Display search results or top doctors
+                    Obx(() {
+                      if (searchController.isLoading.value) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (searchController.searchResults.isNotEmpty) {
+                        // Display search results if available
+                        return _buildSearchResultsList(searchController);
+                      } else {
+                        // Otherwise, show top doctors list
+                        return _buildTopDoctorsList(doctorController);
+                      }
+                    }),
                   ],
                 ),
               ),
@@ -108,6 +129,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  // Top Doctors List Builder
   Widget _buildTopDoctorsList(TopDoctorController doctorController) {
     return Obx(() {
       final displayDoctors = doctorController.showAll.value
@@ -115,64 +137,70 @@ class HomeScreen extends StatelessWidget {
           : doctorController.doctors.take(4).toList();
 
       return SizedBox(
-        height: 250,
-        // Set a fixed height for the horizontal list
+        height: 250, // Set a fixed height for the horizontal list
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: displayDoctors.length,
           itemBuilder: (context, index) {
             final doctor = displayDoctors[index];
-            return Card(
-              margin: const EdgeInsets.only(right: 10),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: CircleAvatar(
-                          radius: 60,
-                          child: Image.network(doctor.avatar,
-                              height: 80, width: 80),
+            return GestureDetector(
+              onTap: () {
+                // Navigate to the DoctorDetailsPage with the selected doctor's information
+                Get.to(() => DoctorProfileDetails(), arguments: doctor);
+              },
+              child: Card(
+                margin: const EdgeInsets.only(right: 10),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 15),
+                      Expanded(
+                        child: Center(
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundImage: NetworkImage(
+                                doctor.avatar), // Display doctor's image
+                          ),
                         ),
                       ),
-                    ), // Doctor's image
-                    const SizedBox(height: 8),
-                    Expanded(
+                      const SizedBox(height: 8),
+                      Expanded(
                         child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Dr ${doctor.fullName}",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20)),
-                        const SizedBox(height: 4),
-                        Text(
-                          doctor.specialization,
-                          style: const TextStyle(fontSize: 20),
-                          textAlign: TextAlign.left,
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Icon(
-                              Icons.star,
-                              color: kYellowColor,
-                              size: 30,
-                            ),
-                            const SizedBox(width: 10),
                             Text(
-                              ' ${doctor.averageRating.toStringAsFixed(1)}',
+                              "Dr ${doctor.doctorName}",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              doctor.specialization,
                               style: const TextStyle(fontSize: 20),
+                              textAlign: TextAlign.left,
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.star,
+                                  color: kYellowColor,
+                                  size: 30,
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  ' ${doctor.averageRating.toStringAsFixed(1)}',
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                              ],
                             ),
                           ],
-                        )
-                      ],
-                    ))
-                  ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -180,5 +208,73 @@ class HomeScreen extends StatelessWidget {
         ),
       );
     });
+  }
+
+  // Search Results List Builder
+  Widget _buildSearchResultsList(DoctorSearchController searchController) {
+    return SizedBox(
+      height: 250, // Set a fixed height for the horizontal list
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: searchController.searchResults.length,
+        itemBuilder: (context, index) {
+          final doctor = searchController.searchResults[index];
+          return Card(
+            margin: const EdgeInsets.only(right: 10),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: CircleAvatar(
+                        radius: 60,
+                        child:
+                            Image.network(doctor.avatar, height: 80, width: 80),
+                      ),
+                    ),
+                  ), // Doctor's image
+                  const SizedBox(height: 8),
+                  Expanded(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Dr ${doctor.doctorName}",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20)),
+                      const SizedBox(height: 4),
+                      Text(
+                        doctor.specialization,
+                        style: const TextStyle(fontSize: 20),
+                        textAlign: TextAlign.left,
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            color: kYellowColor,
+                            size: 30,
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            ' ${doctor.averageRating.toStringAsFixed(1)}',
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ],
+                      )
+                    ],
+                  ))
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }

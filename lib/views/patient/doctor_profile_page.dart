@@ -85,6 +85,9 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
                 children: [
                   _buildDoctorCard(),
                   const SizedBox(height: 8),
+                  // SizedBox(
+                  //     child: Text(
+                  //         'Retrieved Patient ID in DoctorProfileDetails: ${authController.patientId.value}')),
                   _buildDateTimeline(),
                   const SizedBox(height: 10),
                   Center(
