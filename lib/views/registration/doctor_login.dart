@@ -1,5 +1,6 @@
 import 'package:doctorappointmenapp/controllers/auth_controller.dart';
 import 'package:doctorappointmenapp/routes/app_routes.dart';
+import 'package:doctorappointmenapp/services/doctor/login_authservice.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,9 @@ class DoctorLoginView extends StatelessWidget {
     final AuthController _authController = Get.put(AuthController());
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
+    final DoctorLoginAuthService _doctorLoginAuthService =
+        DoctorLoginAuthService();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -56,12 +60,22 @@ class DoctorLoginView extends StatelessWidget {
               child: SizedBox(
                 width: 180,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     final email = emailController.text.trim();
                     final password = passwordController.text.trim();
 
                     // Trigger login process
-                    _authController.loginUser(email, password);
+                    final doctor = await _doctorLoginAuthService.doctorLogin(
+                        email, password);
+
+                    if (doctor != null) {
+                      Get.snackbar("Success", "Login successful");
+                      Get.offAllNamed(AppRoutes
+                          .doctoDashboardView); // Navigate to doctor dashboard or home
+                    } else {
+                      Get.snackbar("Error",
+                          "Failed to login, please check your credentials");
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: greenColor,
@@ -81,7 +95,7 @@ class DoctorLoginView extends StatelessWidget {
             const SizedBox(height: 80),
             Center(
               child: TextButton(
-                onPressed: () => Get.toNamed(AppRoutes.DOCTOR_REGISTER),
+                onPressed: () => Get.toNamed(AppRoutes.doctorRegister),
                 child: Text(
                   'Don\'t have an account? Register',
                   style:

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:doctorappointmenapp/models/patient/patient_model.dart';
 import 'package:doctorappointmenapp/services/token_service.dart';
 import 'package:doctorappointmenapp/utils/constant.dart';
@@ -77,4 +78,6 @@ class AuthService {
       throw Exception('Error during logout');
     }
   }
+
+  // registerDoctor({required String fullName, required String email, required String doctorName, required String password, required String specialization, required String qualification, required String experience, File? avatar}) {}
 }

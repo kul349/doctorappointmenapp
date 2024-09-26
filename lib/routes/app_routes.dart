@@ -1,5 +1,6 @@
 import 'package:doctorappointmenapp/views/notification/notification.dart';
 import 'package:doctorappointmenapp/views/patient/appointment.dart';
+import 'package:doctorappointmenapp/views/patient/doctor/doctor_dasboard.dart';
 import 'package:doctorappointmenapp/views/patient/get_ratting_page.dart';
 import 'package:doctorappointmenapp/views/patient/home_screen.dart';
 import 'package:doctorappointmenapp/views/registration/doctor_login.dart';
@@ -15,7 +16,7 @@ class AppRoutes {
   static const splash = '/';
   static const HOME = '/home';
   static const patientRegister = '/patientRegister';
-  static const DOCTOR_REGISTER = '/doctor_register';
+  static const doctorRegister = '/doctor_register';
   static const DOCTOR_LOGIN = '/doctor_login';
   static const PATIENT_LOGIN = '/Patient_login';
   static const HOMESCREEN = '/homescreen';
@@ -24,6 +25,7 @@ class AppRoutes {
       '/notifications'; // Remove the space before 'notifications'
   static const addRating = '/addRating';
   // List of GetPages that defines the routes and their corresponding views
+  static const doctoDashboardView = '/dashboard';
   static final routes = [
     GetPage(
       name: splash,
@@ -38,7 +40,7 @@ class AppRoutes {
       page: () => const PatientRegisterView(),
     ),
     GetPage(
-      name: DOCTOR_REGISTER,
+      name: doctorRegister,
       page: () => DoctorRegisterView(),
     ),
     GetPage(
@@ -66,6 +68,11 @@ class AppRoutes {
       page: () => RatingPage(
         doctorId: Get.arguments['doctorId'],
       ), // Pass the doctorId
-    )
+    ),
+    // for doctorside 
+    GetPage(
+      name: doctoDashboardView,
+      page: () => DoctorDashboardView(),
+    ),
   ];
 }

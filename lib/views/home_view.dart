@@ -38,7 +38,7 @@ class HomeView extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        Get.toNamed(AppRoutes.DOCTOR_REGISTER);
+                        Get.toNamed(AppRoutes.doctorRegister);
                       },
                       child: Container(
                         height: 220,

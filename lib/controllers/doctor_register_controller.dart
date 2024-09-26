@@ -1,111 +1,59 @@
-import 'package:doctorappointmenapp/routes/app_routes.dart';
-import 'package:doctorappointmenapp/services/auth_service.dart';
+import 'dart:io';
+import 'package:doctorappointmenapp/services/doctor/doctor_authservice.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io'; // For File
+import 'package:doctorappointmenapp/routes/app_routes.dart'; // Import your routes
 
 class DoctorRegisterController extends GetxController {
-  // Controllers for form fields
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  final fullNameController = TextEditingController();
-  final userNameController = TextEditingController();
-  final specializationController = TextEditingController();
-  final experienceController = TextEditingController();
-  final licenseNumberController = TextEditingController();
-  final qualificationsController = TextEditingController();
-  final certificationsController = TextEditingController();
-  final bioController = TextEditingController();
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController doctorNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController specializationController = TextEditingController();
+  final TextEditingController qualificationController = TextEditingController();
+  final TextEditingController experienceController = TextEditingController();
 
-  // Avatar image file
-  File? avatarImage;
-  final authService = AuthService();
-
-  // Replace with your backend URL
-  final String baseUrl =
-      'http://localhost:8000/api/v1/doctors/register'; // Adjust URL for your backend
+  File? avatarImage; // Field to hold the avatar image
 
   Future<void> registerDoctor() async {
-    final String email = emailController.text.trim();
-    final String password = passwordController.text.trim();
-    final String confirmPassword = confirmPasswordController.text.trim();
-    final String fullName = fullNameController.text.trim();
-    final String userName = userNameController.text.trim();
-    final String specialization = specializationController.text.trim();
-    final String experience = experienceController.text.trim();
-    final String licenseNumber = licenseNumberController.text.trim();
-    final String qualifications = qualificationsController.text.trim();
-    final String certifications = certificationsController.text.trim();
-    final String bio = bioController.text.trim();
-
-    if (password != confirmPassword) {
-      Get.snackbar('Error', 'Passwords do not match');
+    // Add validation for password confirmation
+    if (passwordController.text != confirmPasswordController.text) {
+      Get.snackbar("Error", "Passwords do not match");
       return;
     }
 
-    try {
-      var request = http.MultipartRequest('POST', Uri.parse(baseUrl))
-        ..fields['email'] = email
-        ..fields['password'] = password
-        ..fields['fullName'] = fullName
-        ..fields['userName'] = userName
-        ..fields['specialization'] = specialization
-        ..fields['experience'] = experience
-        ..fields['licenseNumber'] = licenseNumber
-        ..fields['qualifications'] = qualifications
-        ..fields['certifications'] = certifications
-        ..fields['bio'] = bio;
+    // Call the AuthService to register the doctor
+    final isSuccess = await DoctorAuthService().registerDoctor(
+      fullName: fullNameController.text,
+      email: emailController.text,
+      doctorName: doctorNameController.text,
+      password: passwordController.text,
+      specialization: specializationController.text,
+      qualification: qualificationController.text,
+      experience: experienceController.text,
+      avatarImage: avatarImage!, // Ensure avatarImage is not null
+    );
 
-      if (avatarImage != null) {
-        request.files.add(
-          http.MultipartFile.fromBytes(
-            'avatar',
-            avatarImage!.readAsBytesSync(),
-            filename: 'avatar.jpg',
-          ),
-        );
-      }
-
-      final response = await request.send();
-      final responseBody = await response.stream.bytesToString();
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(responseBody);
-        Get.snackbar('Success', 'Registration successful');
-        print('Registration successful: ${data['message']}');
-        Get.toNamed(AppRoutes.DOCTOR_LOGIN); // Navigate to login page
-      } else {
-        final errorData = jsonDecode(responseBody);
-        Get.snackbar('Error', errorData['message'] ?? 'Registration failed');
-        print('Registration failed: ${responseBody}');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to connect to the server');
-      print('Failed to register: $e');
+    if (isSuccess) {
+      Get.snackbar("Success", "Doctor registered successfully");
+      Get.offAllNamed(AppRoutes.DOCTOR_LOGIN); // Navigate to the doctor login page
+    } else {
+      Get.snackbar("Error", "Failed to register doctor");
     }
-  }
-
-  Future<void> selectAvatarImage() async {
-    // Implement image selection logic here
-    // For example, using image_picker package
   }
 
   @override
   void onClose() {
+    // Dispose of all text editing controllers
+    fullNameController.dispose();
+    doctorNameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
-    fullNameController.dispose();
-    userNameController.dispose();
     specializationController.dispose();
+    qualificationController.dispose();
     experienceController.dispose();
-    licenseNumberController.dispose();
-    qualificationsController.dispose();
-    certificationsController.dispose();
-    bioController.dispose();
     super.onClose();
   }
 }
