@@ -22,7 +22,8 @@ class SplashController extends GetxController {
       try {
         // Decode the token
         final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-
+        String? doctorId = decodedToken['_id'];
+        print("GotdoctorId:$doctorId ");
         // Check for specific fields to determine the role
         final bool isDoctor = decodedToken.containsKey('doctorName') ||
             decodedToken.containsKey('specialization');
@@ -33,7 +34,9 @@ class SplashController extends GetxController {
         // Navigate based on role
         if (isDoctor) {
           Get.offAllNamed(
-              AppRoutes.doctoDashboardView); // Navigate to doctor dashboard
+            AppRoutes.doctoDashboardView,
+            arguments: {'doctorId': doctorId}, // Pass doctorId as an argument
+          ); // Navigate to doctor dashboard
         } else if (isPatient) {
           Get.offAllNamed(AppRoutes.HOMESCREEN); // Navigate to patient homepage
         } else {

@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AppointmentView extends StatelessWidget {
-  final AppointmentController appointmentController =
-      Get.put(AppointmentController());
+  final String doctorId; // doctorId is passed from the previous screen
 
-  AppointmentView({super.key});
+  // Pass the doctorId to the controller
+  final AppointmentController appointmentController;
+
+  AppointmentView({required this.doctorId, super.key})
+      : appointmentController = Get.put(AppointmentController(doctorId));
 
   @override
   Widget build(BuildContext context) {

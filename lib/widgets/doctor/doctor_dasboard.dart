@@ -1,11 +1,17 @@
+import 'package:doctorappointmenapp/routes/app_routes.dart';
+import 'package:doctorappointmenapp/services/doctor/login_authservice.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 
 class DoctorDashboardView extends StatelessWidget {
+  final DoctorLoginAuthService _authService = DoctorLoginAuthService(); // Instance of Auth Service
+
   @override
   Widget build(BuildContext context) {
+    // Retrieve doctorId from the arguments
+    final String doctorId = Get.arguments['doctorId'] ?? '';
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -15,11 +21,14 @@ class DoctorDashboardView extends StatelessWidget {
         backgroundColor: greenColor,
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              // Call the logout function here, e.g., from the AuthController
-              // Get.find<AuthController>().logout(); // Uncomment and implement in AuthController
-              Get.offAllNamed(AppRoutes.DOCTOR_LOGIN); // Redirect to login
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              try {
+                await _authService.doctorLogout(); // Call the logout function
+                Get.offAllNamed(AppRoutes.HOME); // Navigate to login page after logout
+              } catch (e) {
+                Get.snackbar("Error", "Logout failed. Please try again.");
+              }
             },
           ),
         ],
@@ -46,11 +55,12 @@ class DoctorDashboardView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            // Dashboard buttons
             ElevatedButton(
               onPressed: () {
-                // Navigate to the appointments view
-                // Get.toNamed(AppRoutes.APPOINTMENTS); // Replace with your appointments route
+                // Navigate to the appointments view and pass doctorId
+                Get.toNamed(AppRoutes.patientAppointmentView, arguments: {
+                  'doctorId': doctorId, // Pass the doctorId here
+                });
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: greenColor,
@@ -68,7 +78,7 @@ class DoctorDashboardView extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Navigate to the patient profiles view
-                // Get.toNamed(AppRoutes.PATIENT_PROFILES); // Replace with your patient profiles route
+                Get.toNamed('/patient_profiles'); // Replace with your patient profiles route
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: greenColor,
@@ -86,7 +96,7 @@ class DoctorDashboardView extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Navigate to the ratings/reviews page
-                // Get.toNamed(AppRoutes.RATINGS); // Replace with your ratings/reviews route
+                Get.toNamed('/ratings'); // Replace with your ratings/reviews route
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: greenColor,

@@ -1,6 +1,7 @@
 class AppointmentModel {
   final String appointmentId;
   final String patientId;
+  final String doctorId;
   final String patientName;
   final String doctorName;
   final String doctorSpecialization;
@@ -8,17 +9,19 @@ class AppointmentModel {
   final String startTime;
   final String endTime;
   final String doctorImage;
-  AppointmentModel({
-    required this.appointmentId,
-    required this.patientId,
-    required this.patientName,
-    required this.doctorName,
-    required this.doctorSpecialization,
-    required this.date,
-    required this.startTime,
-    required this.endTime,
-    required this.doctorImage,
-  });
+  final String patientImage;
+  AppointmentModel(
+      {required this.appointmentId,
+      required this.patientId,
+      required this.patientName,
+      required this.doctorName,
+      required this.doctorSpecialization,
+      required this.date,
+      required this.startTime,
+      required this.endTime,
+      required this.doctorImage,
+      required this.doctorId,
+      required this.patientImage});
 
   factory AppointmentModel.fromJson(Map<String, dynamic> json) {
     return AppointmentModel(
@@ -31,6 +34,8 @@ class AppointmentModel {
       startTime: json['startTime'] ?? "",
       endTime: json['endTime'] ?? "",
       doctorImage: json['doctorImage'] ?? "",
+      doctorId: json['doctorId'] ?? "",
+      patientImage: json['patientImage'] ?? "",
     );
   }
 }

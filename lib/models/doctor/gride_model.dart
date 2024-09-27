@@ -1,24 +1,39 @@
 class DoctorModel {
-  final String id;
-  final String fullName;
-  final String avatar;
-  final String email;
-  final String doctorName;
-  final String specialization;
-  final double averageRating;
-  final int totalRatings;
-  final String availabilityStatus;
+   String id;
+   String fullName;
+   String avatar;
+   String email;
+   String doctorName;
+   String specialization;
+   double averageRating;
+   int totalRatings;
+  String availabilityStatus;
 
-  DoctorModel(
-      {required this.fullName,
-      required this.avatar,
-      required this.email,
-      required this.doctorName,
-      required this.specialization,
-      required this.averageRating,
-      required this.totalRatings,
-      required this.availabilityStatus,
-      required this.id});
+  // New fields for update
+   String? licenseNumber;
+   String? bio;
+   String? clinicName;
+   String? clinicAddress;
+   double? consultationFee;
+   List<double>? locationCoordinates;
+
+  DoctorModel({
+    required this.fullName,
+    required this.avatar,
+    required this.email,
+    required this.doctorName,
+    required this.specialization,
+    required this.averageRating,
+    required this.totalRatings,
+    required this.availabilityStatus,
+    required this.id,
+    this.licenseNumber,
+    this.bio,
+    this.clinicName,
+    this.clinicAddress,
+    this.consultationFee,
+    this.locationCoordinates,
+  });
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     final ratingsSummary = json['ratingsSummary'] ?? {};
@@ -33,6 +48,16 @@ class DoctorModel {
       averageRating: (ratingsSummary['averageRating'] ?? 0).toDouble(),
       totalRatings: (ratingsSummary['totalRatings'] ?? 0).toInt(),
       availabilityStatus: json['availabilityStatus'] ?? 'unknown',
+
+      // Fetching the new fields if present in the JSON
+      licenseNumber: json['licenseNumber'] ?? '',
+      bio: json['bio'] ?? '',
+      clinicName: json['clinicName'] ?? '',
+      clinicAddress: json['clinicAddress'] ?? '',
+      consultationFee: (json['consultationFee'] ?? 0).toDouble(),
+      locationCoordinates: (json['location'] != null && json['location']['coordinates'] != null)
+          ? List<double>.from(json['location']['coordinates'].map((e) => e.toDouble()))
+          : null,
     );
   }
 
@@ -48,7 +73,17 @@ class DoctorModel {
         'totalRatings': totalRatings,
       },
       'availabilityStatus': availabilityStatus,
-      "_id": id
+      'licenseNumber': licenseNumber,
+      'bio': bio,
+      'clinicName': clinicName,
+      'clinicAddress': clinicAddress,
+      'consultationFee': consultationFee,
+      'location': locationCoordinates != null
+          ? {
+              'coordinates': locationCoordinates,
+            }
+          : null,
+      "_id": id,
     };
   }
 }

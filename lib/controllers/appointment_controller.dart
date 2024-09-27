@@ -9,7 +9,9 @@ class AppointmentController extends GetxController {
   var userAppointments = <AppointmentModel>[].obs;
   var isLoading = true.obs;
   var errorMessage = ''.obs;
-  final TokenService _tokenService = TokenService(); // Instance of TokenService
+  final TokenService _tokenService = TokenService();
+
+  AppointmentController(String doctorId); // Instance of TokenService
 
   @override
   void onInit() {
@@ -46,4 +48,6 @@ class AppointmentController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  fetchAppointments() {}
 }

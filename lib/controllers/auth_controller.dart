@@ -53,4 +53,6 @@ class AuthController extends GetxController {
     await _authService.logout();
     Get.offAllNamed('/login');
   }
+
+  void doctorLogout() {}
 }
