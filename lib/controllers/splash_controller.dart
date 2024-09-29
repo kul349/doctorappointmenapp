@@ -1,12 +1,9 @@
-import 'package:doctorappointmenapp/controllers/auth_controller.dart';
 import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/services/token_service.dart';
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class SplashController extends GetxController {
-  final AuthController _authController = Get.find<AuthController>();
-
   @override
   void onInit() {
     super.onInit();
@@ -41,6 +38,8 @@ class SplashController extends GetxController {
             arguments: {'doctorId': doctorId},
           );
         } else if (isPatient) {
+          String? patientId = decodedToken['_id'];
+          print("Got doctorId: $patientId");
           Get.offAllNamed(AppRoutes.HOMESCREEN);
         } else {
           Get.offAllNamed(AppRoutes.HOME);

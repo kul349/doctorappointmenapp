@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:doctorappointmenapp/models/patient/patient_model.dart';
 import 'package:doctorappointmenapp/services/token_service.dart';
 import 'package:doctorappointmenapp/utils/constant.dart';
@@ -25,7 +24,8 @@ class AuthService {
       final url = Uri.parse('$baseUrl/users/login'); // API endpoint for login
       final response = await http.post(
         url,
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json',
+        },
         body: jsonEncode({'email': email, 'password': password}),
       );
       print(response.statusCode);

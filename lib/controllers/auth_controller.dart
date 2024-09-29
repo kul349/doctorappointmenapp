@@ -20,6 +20,8 @@ class AuthController extends GetxController {
       print('token found:$token');
       Get.offAllNamed(AppRoutes.HOMESCREEN);
     } else {
+      print('token not found');
+
       Get.offAllNamed(AppRoutes.HOME);
     }
   }

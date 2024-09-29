@@ -108,13 +108,13 @@ class HomeScreen extends StatelessWidget {
                     // Display search results or top doctors
                     Obx(() {
                       if (searchController.isLoading.value) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       } else if (searchController.searchResults.isNotEmpty) {
                         // Display search results if available
                         return _buildSearchResultsList(searchController);
                       } else {
                         // Otherwise, show top doctors list
-                        return _buildTopDoctorsList(doctorController);
+                        return _buildTopDoctorsList(context, doctorController);
                       }
                     }),
                   ],
@@ -123,21 +123,22 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           // Bottom Navigation Bar
-          BottomNavBar(),
+          const BottomNavBar(),
         ],
       ),
     );
   }
 
   // Top Doctors List Builder
-  Widget _buildTopDoctorsList(TopDoctorController doctorController) {
+  Widget _buildTopDoctorsList(
+      BuildContext context, TopDoctorController doctorController) {
     return Obx(() {
       final displayDoctors = doctorController.showAll.value
           ? doctorController.doctors.take(11).toList()
           : doctorController.doctors.take(4).toList();
 
       return SizedBox(
-        height: 250, // Set a fixed height for the horizontal list
+        height: MediaQuery.of(context).size.height * 0.35, // Responsive height
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: displayDoctors.length,
@@ -148,58 +149,70 @@ class HomeScreen extends StatelessWidget {
                 // Navigate to the DoctorDetailsPage with the selected doctor's information
                 Get.to(() => DoctorProfileDetails(), arguments: doctor);
               },
-              child: Card(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.4, // Dynamic width
                 margin: const EdgeInsets.only(right: 10),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 15),
-                      Expanded(
-                        child: Center(
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 10),
+
+                        // Center the Avatar
+                        Center(
                           child: CircleAvatar(
-                            radius: 60,
-                            backgroundImage: NetworkImage(
-                                doctor.avatar), // Display doctor's image
+                            radius: MediaQuery.of(context).size.width *
+                                0.1, // Responsive avatar size
+                            backgroundImage: NetworkImage(doctor.avatar),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+
+                        const SizedBox(height: 8),
+
+                        // Expanded ensures text doesn't overflow the card's height
+                        Expanded(
+                          child: Text(
+                            "Dr ${doctor.doctorName}",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16, // Reduced font size for better fit
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 4),
+
+                        Expanded(
+                          child: Text(
+                            doctor.specialization,
+                            style: const TextStyle(
+                                fontSize: 14), // Responsive font size
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+
+                        const SizedBox(height: 4),
+
+                        // Row for ratings
+                        Row(
                           children: [
+                            const Icon(
+                              Icons.star,
+                              color: kYellowColor, // Ensure this is defined
+                              size: 24, // Adjusted icon size
+                            ),
+                            const SizedBox(width: 5),
                             Text(
-                              "Dr ${doctor.doctorName}",
+                              doctor.averageRating.toStringAsFixed(1),
                               style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              doctor.specialization,
-                              style: const TextStyle(fontSize: 20),
-                              textAlign: TextAlign.left,
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.star,
-                                  color: kYellowColor,
-                                  size: 30,
-                                ),
-                                const SizedBox(width: 10),
-                                Text(
-                                  ' ${doctor.averageRating.toStringAsFixed(1)}',
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                              ],
+                                  fontSize: 16), // Adjusted text size
                             ),
                           ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

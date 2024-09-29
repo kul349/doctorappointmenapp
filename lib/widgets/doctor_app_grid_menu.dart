@@ -16,8 +16,10 @@ class DoctorAppGridMenu extends StatelessWidget {
       () => GridView.builder(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200, // Maximum width per grid item
+          childAspectRatio: 1, // Adjust to make items square
+
           mainAxisSpacing: 8,
         ),
         padding: EdgeInsets.zero,
