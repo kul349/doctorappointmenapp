@@ -67,26 +67,25 @@ class AppointmentView extends StatelessWidget {
                         Row(
                           children: [
                             SizedBox(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Icon(Icons.watch_later_rounded),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                      ' ${appointment.startTime} - ${appointment.endTime}'),
-                                  const SizedBox(
-                                    width: 50,
-                                  ),
-                                  const Icon(Icons.calendar_month_outlined,
-                                      color: Colors.black),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(' ${appointment.date}'),
-                                ],
+                              child: Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Icon(Icons.watch_later_rounded),
+                                    Text(
+                                        ' ${appointment.startTime} - ${appointment.endTime}'),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    const Icon(Icons.calendar_month_outlined,
+                                        color: Colors.black),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(' ${appointment.date}'),
+                                  ],
+                                ),
                               ),
                             )
                           ],

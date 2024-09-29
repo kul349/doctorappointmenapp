@@ -83,33 +83,38 @@ class PatientAppointmentView extends StatelessWidget {
                     ),
                     subtitle: Column(
                       children: [
+                        
                         Row(
                           children: [
-                            SizedBox(
+                            Expanded(
+                              // Ensures that content within the Row is properly contained within available space
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Icon(Icons.watch_later_rounded),
-                                  const SizedBox(
-                                    width: 10,
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      '$formattedStartTime - $formattedEndTime',
+                                      overflow: TextOverflow
+                                          .ellipsis, // Ensures text does not overflow
+                                    ),
                                   ),
-                                  Text(
-                                      '$formattedStartTime - $formattedEndTime'),
-                                  const SizedBox(
-                                    width: 30,
-                                  ),
+                                  const SizedBox(width: 10),
                                   const Icon(Icons.calendar_month_outlined,
                                       color: Colors.black),
-                                  const SizedBox(
-                                    width: 10,
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      ' $formattedDate',
+                                      overflow: TextOverflow
+                                          .ellipsis, // Prevents overflow on the date text
+                                    ),
                                   ),
-                                  Text(' $formattedDate'),
                                 ],
                               ),
-                            )
+                            ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                     onTap: () {

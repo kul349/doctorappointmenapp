@@ -28,10 +28,10 @@ class PatientAppointmentController extends GetxController {
         final Map<String, dynamic> jsonData = json.decode(response.body);
         print('Decoded JSON: $jsonData');
 
-        // Access appointments data safely
+        // Safely access appointments data
         final List<dynamic> appointmentsData = jsonData['appointments'] ?? [];
 
-        // Check if appointmentsData is a list
+        // Ensure that appointmentsData is a list
         if (appointmentsData is! List) {
           throw Exception('Appointments data is not a list');
         }

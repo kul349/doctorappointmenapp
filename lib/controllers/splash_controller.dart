@@ -16,39 +16,41 @@ class SplashController extends GetxController {
   void _navigateToHome() async {
     await Future.delayed(const Duration(seconds: 3));
 
-    // Get the token
     final token = await TokenService().getToken();
     if (token != null) {
       try {
-        // Decode the token
+        print(token);
+        // Decode the token and print the entire content
         final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+        print("Decoded token: $decodedToken");
+
         String? doctorId = decodedToken['_id'];
-        print("GotdoctorId:$doctorId ");
-        // Check for specific fields to determine the role
+        print("Got doctorId: $doctorId");
+
+        // Check for specific fields
         final bool isDoctor = decodedToken.containsKey('doctorName') ||
             decodedToken.containsKey('specialization');
 
-        final bool isPatient = decodedToken.containsKey('userName') &&
-            !isDoctor; // Ensure it's not a doctor
+        final bool isPatient =
+            decodedToken.containsKey('userName') && !isDoctor;
 
         // Navigate based on role
         if (isDoctor) {
           Get.offAllNamed(
             AppRoutes.doctoDashboardView,
-            arguments: {'doctorId': doctorId}, // Pass doctorId as an argument
-          ); // Navigate to doctor dashboard
+            arguments: {'doctorId': doctorId},
+          );
         } else if (isPatient) {
-          Get.offAllNamed(AppRoutes.HOMESCREEN); // Navigate to patient homepage
+          Get.offAllNamed(AppRoutes.HOMESCREEN);
         } else {
-          Get.offAllNamed(
-              AppRoutes.HOME); // Navigate to login if role is unknown
+          Get.offAllNamed(AppRoutes.HOME);
         }
       } catch (e) {
-        print('Error decoding token: $e'); // Log error
-        Get.offAllNamed(AppRoutes.HOME); // Navigate to login on error
+        print('Error decoding token: $e');
+        Get.offAllNamed(AppRoutes.HOME);
       }
     } else {
-      Get.offAllNamed(AppRoutes.HOME); // Navigate to login if no token
+      Get.offAllNamed(AppRoutes.HOME);
     }
   }
 }
