@@ -80,7 +80,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    DoctorAppGridMenu(),
+                    const DoctorAppGridMenu(),
                     const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,7 +138,7 @@ class HomeScreen extends StatelessWidget {
           : doctorController.doctors.take(4).toList();
 
       return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.35, // Responsive height
+        height: MediaQuery.of(context).size.height * 0.25, // Responsive height
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: displayDoctors.length,
@@ -147,7 +147,7 @@ class HomeScreen extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 // Navigate to the DoctorDetailsPage with the selected doctor's information
-                Get.to(() => DoctorProfileDetails(), arguments: doctor);
+                Get.to(() =>  DoctorProfileDetails(), arguments: doctor);
               },
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.4, // Dynamic width

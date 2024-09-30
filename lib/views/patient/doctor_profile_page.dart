@@ -75,98 +75,100 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
         title: Text(controller.doctor.specialization),
         centerTitle: true,
       ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildDoctorCard(),
-                  const SizedBox(height: 8),
-                  // SizedBox(
-                  //     child: Text(
-                  //         'Retrieved Patient ID in DoctorProfileDetails: ${authController.patientId.value}')),
-                  _buildDateTimeline(),
-                  const SizedBox(height: 10),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final TimeSlotController timeSlotController =
-                            Get.find<TimeSlotController>();
-                        final selectedTime =
-                            timeSlotController.selectedTime.value;
-                        if (selectedTime != null) {
-                          // Proceed with booking logic
-                          final tokenService = TokenService();
-                          String? token = await tokenService.getToken();
-                          print("token for appointment:$token");
-                          if (token != null) {
-                            String formattedDate = DateFormat('yyyy-MM-dd')
-                                .format(selectedDate.value);
-// Convert TimeOfDay to a string in HH:mm format
-                            String formattedTimeSlot =
-                                "${selectedTime.hour}:${selectedTime.minute.toString().padLeft(2, '0')}";
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDoctorCard(),
+                    const SizedBox(height: 8),
+                    // SizedBox(
+                    //     child: Text(
+                    //         'Retrieved Patient ID in DoctorProfileDetails: ${authController.patientId.value}')),
+                    _buildDateTimeline(),
+                    const SizedBox(height: 10),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final TimeSlotController timeSlotController =
+                              Get.find<TimeSlotController>();
+                          final selectedTime =
+                              timeSlotController.selectedTime.value;
+                          if (selectedTime != null) {
+                            // Proceed with booking logic
+                            final tokenService = TokenService();
+                            String? token = await tokenService.getToken();
+                            print("token for appointment:$token");
+                            if (token != null) {
+                              String formattedDate = DateFormat('yyyy-MM-dd')
+                                  .format(selectedDate.value);
+                              // Convert TimeOfDay to a string in HH:mm format
+                              String formattedTimeSlot =
+                                  "${selectedTime.hour}:${selectedTime.minute.toString().padLeft(2, '0')}";
 
-// Log the values before booking
-                            print(
-                                'Patient ID: ${authController.patientId.value}');
-                            print('Doctor ID: ${controller.doctor.id}');
-                            print('Formatted Date: $formattedDate');
-                            print('Formatted Time Slot: $formattedTimeSlot');
-
-                            try {
-                              await bookAppointment(
-                                  token: token,
-                                  patientId: authController.patientId.value,
-                                  doctorId: controller.doctor.id,
-                                  date: formattedDate,
-                                  startTime: formattedTimeSlot);
+                              // Log the values before booking
                               print(
-                                  "Booking appointment at $selectedTime on ${selectedDate.value}");
-                              print(authController.patientId.value);
-                              print("Navigating to Rating page");
+                                  'Patient ID: ${authController.patientId.value}');
+                              print('Doctor ID: ${controller.doctor.id}');
+                              print('Formatted Date: $formattedDate');
+                              print('Formatted Time Slot: $formattedTimeSlot');
 
-                              Get.toNamed(
-                                AppRoutes.addRating,
-                                arguments: {
-                                  'doctorId': controller.doctor.id,
-                                  "patientId": authController.patientId.value
-                                },
-                              );
-                            } catch (e) {
-                              print(
-                                "bad error:$e",
-                              );
+                              try {
+                                await bookAppointment(
+                                    token: token,
+                                    patientId: authController.patientId.value,
+                                    doctorId: controller.doctor.id,
+                                    date: formattedDate,
+                                    startTime: formattedTimeSlot);
+                                print(
+                                    "Booking appointment at $selectedTime on ${selectedDate.value}");
+                                print(authController.patientId.value);
+                                print("Navigating to Rating page");
+
+                                Get.toNamed(
+                                  AppRoutes.addRating,
+                                  arguments: {
+                                    'doctorId': controller.doctor.id,
+                                    "patientId": authController.patientId.value
+                                  },
+                                );
+                              } catch (e) {
+                                print(
+                                  "bad error:$e",
+                                );
+                              }
+                            } else {
+                              Get.snackbar("Error", "You have to login ");
                             }
-                          } else {
-                            Get.snackbar("Error", "You have to login ");
                           }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 40, vertical: 20),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.green,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Text(
+                          "Book Appointment",
+                          style: TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      child: const Text(
-                        "Book Appointment",
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                ],
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -199,26 +201,26 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
                           size: 60,
                         ),
                 ),
-                const SizedBox(width: 20),
-                Flexible(
+                const SizedBox(width: 15),
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Dr. ${controller.doctor.fullName}',
                         style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         controller.doctor.specialization,
-                        style: const TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 18),
                       ),
                       Row(
                         children: [
-                          Expanded(child: ratingCard()),
+                          ratingCard(),
                           const SizedBox(width: 4),
-                          Expanded(child: _buildPatientCard()),
+                          _buildPatientCard(),
                         ],
                       ),
                     ],
@@ -241,14 +243,24 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: const Padding(
-        padding: EdgeInsets.all(18.0),
+        padding: EdgeInsets.all(1.0),
         child: Column(
           children: [
-            Text("PATIENT",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            Text("1000+",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            Icon(Icons.people_alt),
+            SizedBox(
+              height: 90,
+              width: 83,
+              child: Column(
+                children: [
+                  Text("PATIENT",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  Text("1000+",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Icon(Icons.people_alt),
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -261,20 +273,32 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(1.0),
         child: Column(
           children: [
-            const Text(
-              "Rating",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            Text(
-              controller.doctor.averageRating.toStringAsFixed(1),
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: _buildStarRating(controller.doctor.averageRating),
+            SizedBox(
+              height: 80,
+              child: Column(
+                children: [
+                  const Text(
+                    "Rating",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    controller.doctor.averageRating.toStringAsFixed(1),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _buildStarRating(controller.doctor.averageRating),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 8),
           ],
@@ -289,15 +313,15 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
     bool hasHalfStar = rating - fullStars >= 0.5;
 
     for (int i = 0; i < fullStars; i++) {
-      stars.add(const Icon(Icons.star, color: Colors.amber, size: 20));
+      stars.add(const Icon(Icons.star, color: Colors.amber, size: 17));
     }
 
     if (hasHalfStar) {
-      stars.add(const Icon(Icons.star_half, color: Colors.amber, size: 18));
+      stars.add(const Icon(Icons.star_half, color: Colors.amber, size: 16));
     }
 
     while (stars.length < 5) {
-      stars.add(const Icon(Icons.star_border, color: Colors.amber, size: 18));
+      stars.add(const Icon(Icons.star_border, color: Colors.amber, size: 16));
     }
 
     return stars;
@@ -310,7 +334,7 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
       children: [
         const Text(
           'About',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Text(
@@ -334,7 +358,7 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
             padding: EdgeInsets.all(10),
             child: Text(
               "Choose date",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           Container(
@@ -357,7 +381,7 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
             child: Text("Choose Time",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 24,
+                  fontSize: 20,
                 )),
           ),
           const SizedBox(height: 8),
@@ -398,73 +422,70 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
             ),
           );
         }
+// don't use expand here it's a incorrect use of parentdata widget
+        return GridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          itemCount: availableSlots.length,
+          itemBuilder: (context, index) {
+            final slot = availableSlots[index];
+            final isTaken = takenSlots.any((slotTime) {
+              // Convert TimeOfDay to DateTime for comparison
+              final slotDateTime = DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                DateTime.now().day,
+                slotTime.hour,
+                slotTime.minute,
+              );
 
-        return SizedBox(
-          height: 500,
-          child: GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
-            itemCount: availableSlots.length,
-            itemBuilder: (context, index) {
-              final slot = availableSlots[index];
-              final isTaken = takenSlots.any((slotTime) {
-                // Convert TimeOfDay to DateTime for comparison
-                final slotDateTime = DateTime(
-                  DateTime.now().year,
-                  DateTime.now().month,
-                  DateTime.now().day,
-                  slotTime.hour,
-                  slotTime.minute,
-                );
-
-                // Check if the slotDateTime falls within the taken time slots
-                return takenSlotsMap.any((slotMap) {
-                  final startTime = DateTime.parse(slotMap['startTime']!);
-                  final endTime = DateTime.parse(slotMap['endTime']!);
-                  return slotDateTime.isAfter(startTime) &&
-                      slotDateTime.isBefore(endTime);
-                });
+              // Check if the slotDateTime falls within the taken time slots
+              return takenSlotsMap.any((slotMap) {
+                final startTime = DateTime.parse(slotMap['startTime']!);
+                final endTime = DateTime.parse(slotMap['endTime']!);
+                return slotDateTime.isAfter(startTime) &&
+                    slotDateTime.isBefore(endTime);
               });
-              final isSelected = slot == timeSlotController.selectedTime.value;
+            });
+            final isSelected = slot == timeSlotController.selectedTime.value;
 
-              return GestureDetector(
-                onTap: isTaken
-                    ? null // Disable if slot is taken
-                    : () {
-                        // Update selected time slot and handle color changes
-                        timeSlotController.updateSelectedTime(slot);
-                      },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: isTaken
-                        ? Colors.red // Taken slot color
-                        : isSelected
-                            ? Colors.green // Selected slot color
-                            : Colors.grey[200], // Available slot color
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: isSelected ? Colors.green : Colors.grey,
-                    ),
+            return GestureDetector(
+              onTap: isTaken
+                  ? null // Disable if slot is taken
+                  : () {
+                      // Update selected time slot and handle color changes
+                      timeSlotController.updateSelectedTime(slot);
+                    },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isTaken
+                      ? Colors.red // Taken slot color
+                      : isSelected
+                          ? Colors.green // Selected slot color
+                          : Colors.grey[200], // Available slot color
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: isSelected ? Colors.green : Colors.grey,
                   ),
-                  child: Center(
-                    child: Text(
-                      formatTimeOfDay(slot),
-                      style: TextStyle(
-                        color:
-                            isTaken || isSelected ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
+                ),
+                child: Center(
+                  child: Text(
+                    formatTimeOfDay(slot),
+                    style: TextStyle(
+                      color:
+                          isTaken || isSelected ? Colors.white : Colors.black,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         );
       }),
     );

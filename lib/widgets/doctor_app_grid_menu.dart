@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class DoctorAppGridMenu extends StatelessWidget {
-  const DoctorAppGridMenu({Key? key}) : super(key: key);
+  const DoctorAppGridMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class DoctorAppGridMenu extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200, // Maximum width per grid item
+          maxCrossAxisExtent: 120, // Maximum width per grid item
           childAspectRatio: 1, // Adjust to make items square
 
           mainAxisSpacing: 8,
