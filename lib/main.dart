@@ -3,17 +3,21 @@ import 'package:doctorappointmenapp/controllers/auth_controller.dart';
 import 'package:doctorappointmenapp/controllers/doctor_menu_controller.dart';
 import 'package:doctorappointmenapp/controllers/patient_getalldoctor_controller.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'routes/app_routes.dart';
 
-void main() {
+void main() async {
   // Initialize any necessary bindings (like controllers)
   Get.put(DoctorMenuController());
   Get.put(BottomNavController());
   Get.put(AuthController());
   Get.put(DoctorController());
+  WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize Firebase
+  await Firebase.initializeApp();
 
   // Run the Flutter app
   runApp(const MyApp());

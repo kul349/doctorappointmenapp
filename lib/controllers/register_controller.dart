@@ -1,5 +1,6 @@
 import 'package:doctorappointmenapp/services/auth_service.dart';
 import 'package:doctorappointmenapp/utils/constant.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:doctorappointmenapp/routes/app_routes.dart';
@@ -18,7 +19,8 @@ class RegisterController extends GetxController {
   final TextEditingController userNameController = TextEditingController();
   File? avatarImage; // Add this line to handle avatar image
   final authService = AuthService();
-
+  final FirebaseMessaging _firebaseMessaging =
+      FirebaseMessaging.instance; // Firebase messaging
   // Replace with your backend URL
 
   Future<void> registerPatient() async {
@@ -32,14 +34,22 @@ class RegisterController extends GetxController {
       Get.snackbar('Error', 'Passwords do not match');
       return;
     }
-
+    String? instanceId = await FirebaseMessaging.instance.getToken();
+    print("Instance ID: $instanceId");
     try {
+      String? fcmToken = await _firebaseMessaging.getToken();
+      print("fcm token found:${fcmToken}");
+      if (fcmToken == null) {
+        Get.snackbar('Error', 'FCM token not found');
+        return;
+      }
       var request =
           http.MultipartRequest('POST', Uri.parse('$baseUrl/users/register'))
             ..fields['email'] = email
             ..fields['password'] = password
             ..fields['fullName'] = fullName
-            ..fields['userName'] = userName;
+            ..fields['userName'] = userName
+            ..fields['fcmToken'] = fcmToken;
 
       if (avatarImage != null) {
         final bytes = await avatarImage!.readAsBytes();
