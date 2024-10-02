@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:doctorappointmenapp/models/patient/patient_model.dart';
 import 'package:doctorappointmenapp/services/token_service.dart';
 import 'package:doctorappointmenapp/utils/constant.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
@@ -21,12 +22,16 @@ class AuthService {
   // Function to handle user login and store token
   Future<UserModel?> login(String email, String password) async {
     try {
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      print('FCM Token: $fcmToken');
       final url = Uri.parse('$baseUrl/users/login'); // API endpoint for login
       final response = await http.post(
         url,
-        headers: {'Content-Type': 'application/json',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        body: jsonEncode({'email': email, 'password': password}),
+        body: jsonEncode(
+            {'email': email, 'password': password, 'fcmToken': fcmToken}),
       );
       print(response.statusCode);
 
