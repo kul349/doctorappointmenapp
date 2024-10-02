@@ -59,7 +59,9 @@ class AppRoutes {
     ),
     GetPage(
       name: NOTIFICATION,
-      page: () => const NotificationView(),
+      page: () => const NotificationView(
+        payload: "payload",
+      ),
     ),
     GetPage(
       name: APPOINTMENTVIEW,
@@ -82,7 +84,6 @@ class AppRoutes {
         name: patientAppointmentView,
         page: () => PatientAppointmentView(
               doctorId: Get.arguments['doctorId'],
-              
             )),
   ];
 }

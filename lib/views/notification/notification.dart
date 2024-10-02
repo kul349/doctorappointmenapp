@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 
 class NotificationView extends StatelessWidget {
-  const NotificationView({super.key});
+  final String? payload; // Make payload nullable
+
+  const NotificationView({super.key, this.payload});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("notification"),
+        title: const Text("Notification"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
-            children: [const Text("notifcation")],
+            children: [
+              Text(payload ?? "No notification data"), // Handle null payload
+            ],
           ),
         ),
       ),
