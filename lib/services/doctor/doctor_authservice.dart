@@ -11,7 +11,8 @@ class DoctorAuthService {
     required String specialization,
     required String qualification,
     required String experience,
-    required File avatarImage, // Avatar image parameter
+    required File avatarImage,
+    required String fcmToken, // Avatar image parameter
   }) async {
     final url = Uri.parse('$baseUrl/doctor/register');
 
@@ -23,7 +24,8 @@ class DoctorAuthService {
       ..fields['password'] = password
       ..fields['specialization'] = specialization
       ..fields['qualification'] = qualification
-      ..fields['experience'] = experience;
+      ..fields['experience'] = experience
+      ..fields['fcmToken'] = fcmToken; // Add FCM token to request
 
     // Add avatar image to the request
     if (avatarImage != null) {

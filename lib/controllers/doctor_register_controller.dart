@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:doctorappointmenapp/services/doctor/doctor_authservice.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:doctorappointmenapp/routes/app_routes.dart'; // Import your routes
@@ -9,12 +10,27 @@ class DoctorRegisterController extends GetxController {
   final TextEditingController doctorNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-  final TextEditingController specializationController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+  final TextEditingController specializationController =
+      TextEditingController();
   final TextEditingController qualificationController = TextEditingController();
   final TextEditingController experienceController = TextEditingController();
 
   File? avatarImage; // Field to hold the avatar image
+  String? fcmToken;
+  @override
+  void onInit() {
+    super.onInit();
+    _getFcmToken(); // Get the FCM token when the controller is initialized
+  }
+
+  Future<void> _getFcmToken() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    fcmToken = await messaging.getToken();
+    print('FCM Token: $fcmToken');
+  }
+
 
   Future<void> registerDoctor() async {
     // Add validation for password confirmation
@@ -33,11 +49,13 @@ class DoctorRegisterController extends GetxController {
       qualification: qualificationController.text,
       experience: experienceController.text,
       avatarImage: avatarImage!, // Ensure avatarImage is not null
+      fcmToken:fcmToken!
     );
 
     if (isSuccess) {
       Get.snackbar("Success", "Doctor registered successfully");
-      Get.offAllNamed(AppRoutes.DOCTOR_LOGIN); // Navigate to the doctor login page
+      Get.offAllNamed(
+          AppRoutes.DOCTOR_LOGIN); // Navigate to the doctor login page
     } else {
       Get.snackbar("Error", "Failed to register doctor");
     }
