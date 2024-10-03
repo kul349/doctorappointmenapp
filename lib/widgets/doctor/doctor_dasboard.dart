@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 
 class DoctorDashboardView extends StatelessWidget {
-  final DoctorLoginAuthService _authService = DoctorLoginAuthService(); // Instance of Auth Service
+  final DoctorLoginAuthService _authService =
+      DoctorLoginAuthService(); // Instance of Auth Service
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,8 @@ class DoctorDashboardView extends StatelessWidget {
             onPressed: () async {
               try {
                 await _authService.doctorLogout(); // Call the logout function
-                Get.offAllNamed(AppRoutes.HOME); // Navigate to login page after logout
+                Get.offAllNamed(
+                    AppRoutes.HOME); // Navigate to login page after logout
               } catch (e) {
                 Get.snackbar("Error", "Logout failed. Please try again.");
               }
@@ -78,7 +80,8 @@ class DoctorDashboardView extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Navigate to the patient profiles view
-                Get.toNamed('/patient_profiles'); // Replace with your patient profiles route
+                Get.toNamed(
+                    '/patient_profiles'); // Replace with your patient profiles route
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: greenColor,
@@ -96,7 +99,8 @@ class DoctorDashboardView extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Navigate to the ratings/reviews page
-                Get.toNamed('/ratings'); // Replace with your ratings/reviews route
+                Get.toNamed(
+                    '/ratings'); // Replace with your ratings/reviews route
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: greenColor,
@@ -107,6 +111,29 @@ class DoctorDashboardView extends StatelessWidget {
               ),
               child: const Text(
                 'View Ratings & Reviews',
+                style: TextStyle(color: whiteColor, fontSize: 16),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to the appointments view and pass doctorId
+                Get.toNamed(
+                  AppRoutes.doctornotificationview,
+                  arguments: doctorId, // Pass the doctorId as an argument
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: greenColor,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'View notificaiton',
                 style: TextStyle(color: whiteColor, fontSize: 16),
               ),
             ),

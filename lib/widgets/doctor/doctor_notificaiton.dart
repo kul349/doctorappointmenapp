@@ -1,33 +1,30 @@
-import 'package:flutter/material.dart';
 import 'package:doctorappointmenapp/services/notification_auth.dart';
+import 'package:flutter/material.dart';
 
-class NotificationPage extends StatefulWidget {
-  final String userId; // You can still pass the userId dynamically
+class DoctorNotificationPage extends StatefulWidget {
+  final String userId;
 
-  NotificationPage({required this.userId});
+  DoctorNotificationPage({required this.userId});
 
   @override
-  _NotificationPageState createState() => _NotificationPageState();
+  _DoctorNotificationPageState createState() => _DoctorNotificationPageState();
 }
 
-class _NotificationPageState extends State<NotificationPage> {
+class _DoctorNotificationPageState extends State<DoctorNotificationPage> {
   late Future<List<dynamic>> notifications;
-  final String userType = 'Patient'; // Hardcoded as 'Patient'
 
   @override
   void initState() {
     super.initState();
-    // Fetch notifications with the userType set as 'Patient'
-    notifications = fetchNotifications(userType, widget.userId);
-    print(widget.userId);
+    notifications = fetchNotifications(
+        'Doctor', widget.userId); // Fetch notifications for Doctor
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
-        centerTitle: true,
+        title: const Text('Doctor Notifications'),
       ),
       body: FutureBuilder<List<dynamic>>(
         future: notifications,
@@ -47,7 +44,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   title: Text(notification['title']),
                   subtitle: Text(notification['message']),
                   onTap: () {
-                    // Handle what happens when notification is clicked
+                    // Handle notification click
                   },
                 );
               },

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../controllers/splash_controller.dart';
 
-class splashView extends StatelessWidget {
+class SplashView extends StatelessWidget {
   final SplashController controller = Get.put(SplashController());
 
   @override
@@ -14,22 +14,20 @@ class splashView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 70,
-            ),
+            const SizedBox(height: 70),
             Lottie.asset(
               'assets/lottie/splash_animation.json',
-              width: 500,
-              height: 500,
-              fit: BoxFit.fill,
+              width: MediaQuery.of(context).size.width *
+                  0.95, // Make the animation responsive
+              height: MediaQuery.of(context).size.height *
+                  0.7, // Adjust height responsively
+              fit: BoxFit.contain,
             ),
-            const SizedBox(
-              height: 100,
-            ),
+            const SizedBox(height: 50), // Reduce this to avoid overflow
             Center(
               child: Container(
-                margin: const EdgeInsets.only(left: 5, right: 5),
-                padding: const EdgeInsets.only(top: 5, left: 5),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: greenColor,
                   borderRadius: BorderRadius.circular(10),
@@ -38,20 +36,18 @@ class splashView extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.6),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: const Offset(0, 3), // changes position of shadow
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
-                height: 60,
-                width: MediaQuery.of(context).size.width / 0.6,
                 child: Text(
                   "Inspiring better health, one click at a time.",
                   style:
-                      boldTextStyle.copyWith(color: whiteColor, fontSize: 19),
+                      boldTextStyle.copyWith(color: whiteColor, fontSize: 18),
                   textAlign: TextAlign.center,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

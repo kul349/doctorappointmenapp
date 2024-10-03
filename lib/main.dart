@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:doctorappointmenapp/controllers/BottomNavController.dart';
 import 'package:doctorappointmenapp/controllers/auth_controller.dart';
 import 'package:doctorappointmenapp/controllers/doctor_menu_controller.dart';
 import 'package:doctorappointmenapp/controllers/patient_getalldoctor_controller.dart';
+import 'package:doctorappointmenapp/services/localnotification.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:doctorappointmenapp/views/notification/notification.dart';
+import 'package:doctorappointmenapp/widgets/doctor/doctor_notificaiton.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +28,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   // Initialize necessary bindings (like controllers)
+  Get.put(AuthController());
   Get.put(DoctorMenuController());
   Get.put(BottomNavController());
-  Get.put(AuthController());
   Get.put(DoctorController());
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,38 +47,16 @@ void main() async {
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   // Handle foreground messages
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-
-    if (notification != null && android != null) {
-      flutterLocalNotificationsPlugin.show(
-        notification.hashCode,
-        notification.title,
-        notification.body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            notificationChannelId, // Replace with your channel ID
-            notificationChannelName, // Replace with your channel name
-            importance: Importance.max,
-            priority: Priority.high,
-            icon: '@mipmap/ic_launcher',
-          ),
-        ),
-        payload: message.data['payload'], // Pass data payload
-      );
-    }
-  });
-
-  // Handle notification taps when app is opened from background
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    final payload =
-        message.data['payload'] ?? "No payload data"; // Handle null payload
-    Get.to(() => NotificationView(payload: payload));
-  });
-
-  // Set the background message handler
+  await LocalNotification.initLocalNotifications();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onMessage.listen((event) {
+    FirebaseMessaging.instance.getToken();
+    LocalNotification.trigerLocalNotification(
+      title: event.notification!.title ?? "Title",
+      body: event.notification!.body ?? "Body",
+      data: event.data,
+    );
+  });
 
   // Run the Flutter app
   runApp(const MyApp());

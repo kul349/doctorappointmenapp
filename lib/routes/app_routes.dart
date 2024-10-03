@@ -8,6 +8,7 @@ import 'package:doctorappointmenapp/views/registration/register_pat.dart';
 import 'package:doctorappointmenapp/views/registration/regitster_doct.dart';
 import 'package:doctorappointmenapp/widgets/doctor/appointment_list.dart';
 import 'package:doctorappointmenapp/widgets/doctor/doctor_dasboard.dart';
+import 'package:doctorappointmenapp/widgets/doctor/doctor_notificaiton.dart';
 import 'package:get/get.dart';
 import '../views/splash/splash_view.dart';
 import '../views/home_view.dart';
@@ -28,10 +29,11 @@ class AppRoutes {
   // List of GetPages that defines the routes and their corresponding views
   static const doctoDashboardView = '/dashboard';
   static const patientAppointmentView = '/patientAppointmentView';
+  static const doctornotificationview = '/doctornotificationview';
   static final routes = [
     GetPage(
       name: splash,
-      page: () => splashView(),
+      page: () => SplashView(),
     ),
     GetPage(
       name: HOME,
@@ -59,8 +61,8 @@ class AppRoutes {
     ),
     GetPage(
       name: NOTIFICATION,
-      page: () => const NotificationView(
-        payload: "payload",
+      page: () => NotificationPage(
+        userId: Get.arguments['userId'], // Retrieve userId from arguments
       ),
     ),
     GetPage(
@@ -85,5 +87,15 @@ class AppRoutes {
         page: () => PatientAppointmentView(
               doctorId: Get.arguments['doctorId'],
             )),
+    GetPage(
+      name: AppRoutes
+          .doctornotificationview, // Ensure this matches the route name
+      page: () {
+        final String doctorId = Get.arguments; // Retrieve the passed argument
+        return DoctorNotificationPage(
+          userId: doctorId, // Pass the doctorId to the DoctorNotificationPage
+        );
+      },
+    ),
   ];
 }
