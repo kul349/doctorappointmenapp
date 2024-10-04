@@ -1,22 +1,18 @@
-import 'package:doctorappointmenapp/controllers/auth_controller.dart';
-import 'package:doctorappointmenapp/controllers/rating_controller.dart';
+import 'package:doctorappointmenapp/utils/decode_patient_token.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:doctorappointmenapp/controllers/rating_controller.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 
 class RatingPage extends StatelessWidget {
   final RatingController ratingController = Get.put(RatingController());
   final String doctorId;
 
-  // Constructor for RatingPage accepting doctorId
   RatingPage({super.key, required this.doctorId});
 
   @override
   Widget build(BuildContext context) {
-    final AuthController authController =
-        Get.find<AuthController>(); // Access AuthController
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Rate Doctor"),
@@ -78,19 +74,21 @@ class RatingPage extends StatelessWidget {
                     ),
                     onPressed: ratingController.isLoading.value
                         ? null // Disable button if loading
-                        : () {
-                            // Ensure patientId is available
-                            if (authController.patientId.value.isEmpty) {
-                              // Display an error if patientId is empty
+                        : () async {
+                            // Get the patientId using TokenHelper
+                            String? patientId =
+                                await TokenHelper.getPatientId();
+
+                            if (patientId == null || patientId.isEmpty) {
                               ratingController.errorMessage.value =
-                                  "Error: Patient ID is missing while submiting.";
+                                  "Error: Patient ID is missing while submitting.";
                               return;
                             }
 
                             // Submit rating with doctorId and patientId
                             ratingController.submitRating(
                               doctorId,
-                              authController.patientId.value,
+                              patientId,
                             );
                           },
                     child: Text(

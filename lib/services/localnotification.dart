@@ -97,7 +97,9 @@ Future<void> _handleNotificationTap(
       Get.toNamed(AppRoutes.doctornotificationview,
           arguments: {'userId': userId});
     } else if (userType == 'Patient') {
-      Get.toNamed(AppRoutes.NOTIFICATION, arguments: {'userId': userId});
+      Get.toNamed(
+        AppRoutes.NOTIFICATION,
+      );
     } else {
       print("Unknown user type in payload or token.");
       Get.toNamed(AppRoutes.HOME); // Fallback to home if userType is unknown

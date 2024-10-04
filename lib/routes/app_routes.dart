@@ -61,9 +61,7 @@ class AppRoutes {
     ),
     GetPage(
       name: NOTIFICATION,
-      page: () => NotificationPage(
-        userId: Get.arguments['userId'], // Retrieve userId from arguments
-      ),
+      page: () =>  NotificationPage(),
     ),
     GetPage(
       name: APPOINTMENTVIEW,

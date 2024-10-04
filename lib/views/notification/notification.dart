@@ -1,25 +1,26 @@
-import 'package:flutter/material.dart';
 import 'package:doctorappointmenapp/services/notification_auth.dart';
+import 'package:doctorappointmenapp/utils/decode_patient_token.dart';
+import 'package:flutter/material.dart';
 
 class NotificationPage extends StatefulWidget {
-  final String userId; // You can still pass the userId dynamically
-
-  NotificationPage({required this.userId});
+  const NotificationPage({super.key});
 
   @override
   _NotificationPageState createState() => _NotificationPageState();
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  late Future<List<dynamic>> notifications;
-  final String userType = 'Patient'; // Hardcoded as 'Patient'
+  final String userType = 'Patient';
 
-  @override
-  void initState() {
-    super.initState();
-    // Fetch notifications with the userType set as 'Patient'
-    notifications = fetchNotifications(userType, widget.userId);
-    print(widget.userId);
+  Future<List<dynamic>> fetchNotificationsWithUserId() async {
+    String? userId = await TokenHelper.getPatientId();
+    print('User ID in NotificationPage: $userId'); // Debugging line
+
+    if (userId != null && userId.isNotEmpty) {
+      return await fetchNotifications(userType, userId);
+    } else {
+      return [];
+    }
   }
 
   @override
@@ -30,14 +31,14 @@ class _NotificationPageState extends State<NotificationPage> {
         centerTitle: true,
       ),
       body: FutureBuilder<List<dynamic>>(
-        future: notifications,
+        future: fetchNotificationsWithUserId(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No notifications'));
+            return const Center(child: Text('No notifications'));
           } else {
             return ListView.builder(
               itemCount: snapshot.data!.length,
@@ -46,9 +47,6 @@ class _NotificationPageState extends State<NotificationPage> {
                 return ListTile(
                   title: Text(notification['title']),
                   subtitle: Text(notification['message']),
-                  onTap: () {
-                    // Handle what happens when notification is clicked
-                  },
                 );
               },
             );
