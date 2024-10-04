@@ -1,7 +1,6 @@
 import 'package:doctorappointmenapp/controllers/doctor/view_patientappointment.dart';
 import 'package:doctorappointmenapp/models/appointment/appointment.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:intl/intl.dart'; // Import the intl package
@@ -10,7 +9,7 @@ class PatientAppointmentView extends StatelessWidget {
   final String doctorId;
 
   // Constructor that accepts doctorId
-  PatientAppointmentView({Key? key, required this.doctorId}) : super(key: key);
+   const PatientAppointmentView({super.key, required this.doctorId});
 
   @override
   Widget build(BuildContext context) {

@@ -42,7 +42,7 @@ void main() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
   final InitializationSettings initializationSettings =
-      InitializationSettings(android: initializationSettingsAndroid);
+     InitializationSettings(android: initializationSettingsAndroid);
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
@@ -51,7 +51,7 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessage.listen((event) {
     FirebaseMessaging.instance.getToken();
-    LocalNotification.trigerLocalNotification(
+    LocalNotification.triggerLocalNotification(
       title: event.notification!.title ?? "Title",
       body: event.notification!.body ?? "Body",
       data: event.data,

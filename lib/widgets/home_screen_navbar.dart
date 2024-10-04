@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:doctorappointmenapp/controllers/auth_controller.dart';
 
 class HomeScreenNavbar extends StatelessWidget {
-  HomeScreenNavbar({Key? key}) : super(key: key);
+  HomeScreenNavbar({super.key});
 
   final AuthController authController = Get.find<AuthController>();
 
@@ -38,7 +38,7 @@ class HomeScreenNavbar extends StatelessWidget {
             ),
             itemBuilder: (BuildContext context) {
               return [
-                PopupMenuItem<String>(
+                const PopupMenuItem<String>(
                   value: 'logout',
                   child: Text('Logout'),
                 ),

@@ -1,4 +1,3 @@
-import 'package:doctorappointmenapp/controllers/auth_controller.dart';
 import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/services/doctor/login_authservice.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
@@ -6,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DoctorLoginView extends StatelessWidget {
+  const DoctorLoginView({super.key});
+
   @override
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();

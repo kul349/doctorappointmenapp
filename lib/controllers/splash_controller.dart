@@ -39,7 +39,7 @@ class SplashController extends GetxController {
           );
         } else if (isPatient) {
           String? patientId = decodedToken['_id'];
-          print("Got doctorId: $patientId");
+          print("Got patient: $patientId");
           Get.offAllNamed(AppRoutes.HOMESCREEN);
         } else {
           Get.offAllNamed(AppRoutes.HOME);

@@ -5,6 +5,7 @@ import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:doctorappointmenapp/services/auth_service.dart';
 import 'package:doctorappointmenapp/services/token_service.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AuthController extends GetxController {
   final AuthService _authService = AuthService();
@@ -16,12 +17,27 @@ class AuthController extends GetxController {
 
   Future<void> checkUserLoginStatus() async {
     final token = await _tokenService.getToken();
-    if (token != null && token.isNotEmpty) {
-      print('token found:$token');
-      Get.offAllNamed(AppRoutes.HOMESCREEN);
-    } else {
-      print('token not found');
 
+    if (token != null && token.isNotEmpty) {
+      print('Token found: $token');
+
+      // Decode the token and extract the userId
+      final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      String? id = decodedToken['_id']; // Assuming '_id' holds the userId
+
+      if (id != null && id.isNotEmpty) {
+        patientId.value = id; // Store the userId in the observable
+        print('User ID: ${patientId.value}');
+
+        // Navigate to the home screen with the patientId
+        Get.offAllNamed(AppRoutes.HOMESCREEN,
+            parameters: {'patientId': patientId.value});
+      } else {
+        print('User ID not found in token');
+        Get.offAllNamed(AppRoutes.HOME);
+      }
+    } else {
+      print('Token not found');
       Get.offAllNamed(AppRoutes.HOME);
     }
   }
