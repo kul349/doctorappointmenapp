@@ -99,8 +99,9 @@ class DoctorDashboardView extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Navigate to the ratings/reviews page
-                Get.toNamed(
-                    '/ratings'); // Replace with your ratings/reviews route
+                Get.toNamed(AppRoutes.reviewRating, arguments: {
+                  'doctorId': doctorId, // Pass the doctorId here
+                });
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: greenColor,

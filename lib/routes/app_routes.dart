@@ -9,6 +9,7 @@ import 'package:doctorappointmenapp/views/registration/regitster_doct.dart';
 import 'package:doctorappointmenapp/widgets/doctor/appointment_list.dart';
 import 'package:doctorappointmenapp/widgets/doctor/doctor_dasboard.dart';
 import 'package:doctorappointmenapp/widgets/doctor/doctor_notificaiton.dart';
+import 'package:doctorappointmenapp/widgets/doctor/rating_review_list.dart';
 import 'package:get/get.dart';
 import '../views/splash/splash_view.dart';
 import '../views/home_view.dart';
@@ -30,6 +31,7 @@ class AppRoutes {
   static const doctoDashboardView = '/dashboard';
   static const patientAppointmentView = '/patientAppointmentView';
   static const doctornotificationview = '/doctornotificationview';
+  static const reviewRating = '/reviewRating';
   static final routes = [
     GetPage(
       name: splash,
@@ -61,7 +63,7 @@ class AppRoutes {
     ),
     GetPage(
       name: NOTIFICATION,
-      page: () =>  NotificationPage(),
+      page: () => NotificationPage(),
     ),
     GetPage(
       name: APPOINTMENTVIEW,
@@ -94,6 +96,12 @@ class AppRoutes {
           userId: doctorId, // Pass the doctorId to the DoctorNotificationPage
         );
       },
+    ),
+    GetPage(
+      name: reviewRating,
+      page: () => DoctorReviewsPage(
+        Get.arguments['doctorId'],
+      ),
     ),
   ];
 }

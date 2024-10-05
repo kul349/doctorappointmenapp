@@ -1,5 +1,6 @@
-import 'package:doctorappointmenapp/services/notification_auth.dart';
-import 'package:doctorappointmenapp/utils/decode_patient_token.dart';
+import 'package:doctorappointmenapp/models/doctor/notification_model.dart';
+import 'package:doctorappointmenapp/services/notification_auth.dart'; // For fetching notifications
+import 'package:doctorappointmenapp/utils/decode_patient_token.dart'; // For decoding patient token
 import 'package:flutter/material.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -11,15 +12,37 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   final String userType = 'Patient';
+  List<NotificationModel> notifications = [];
 
-  Future<List<dynamic>> fetchNotificationsWithUserId() async {
+  @override
+  void initState() {
+    super.initState();
+    _loadNotifications(); // Load notifications when the page initializes
+  }
+
+  // Function to load notifications from the backend
+  Future<void> _loadNotifications() async {
     String? userId = await TokenHelper.getPatientId();
-    print('User ID in NotificationPage: $userId'); // Debugging line
-
     if (userId != null && userId.isNotEmpty) {
-      return await fetchNotifications(userType, userId);
-    } else {
-      return [];
+      List<NotificationModel> fetchedNotifications =
+          await fetchNotifications(userType, userId);
+      setState(() {
+        notifications = fetchedNotifications;
+      });
+    }
+  }
+
+  // Function to delete notification from backend and update UI
+  Future<void> _deleteNotification(String notificationId) async {
+    String? userId = await TokenHelper.getPatientId();
+    if (userId == null || userId.isEmpty) return;
+
+    bool isDeleted = await deleteNotification(notificationId, userId);
+    if (isDeleted) {
+      setState(() {
+        notifications
+            .removeWhere((notification) => notification.id == notificationId);
+      });
     }
   }
 
@@ -30,29 +53,41 @@ class _NotificationPageState extends State<NotificationPage> {
         title: const Text('Notifications'),
         centerTitle: true,
       ),
-      body: FutureBuilder<List<dynamic>>(
-        future: fetchNotificationsWithUserId(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No notifications'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
+      body: notifications.isEmpty
+          ? const Center(child: Text('No notifications'))
+          : ListView.builder(
+              itemCount: notifications.length,
               itemBuilder: (context, index) {
-                final notification = snapshot.data![index];
-                return ListTile(
-                  title: Text(notification['title']),
-                  subtitle: Text(notification['message']),
+                final notification = notifications[index];
+
+                return Dismissible(
+                  key: Key(
+                      notification.id!), // Unique key based on notification ID
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+                  direction: DismissDirection.startToEnd,
+                  onDismissed: (direction) {
+                    _deleteNotification(
+                        notification.id!); // Delete the notification on swipe
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Notification deleted')),
+                    );
+                  },
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Icon(Icons.person, color: Colors.white),
+                      backgroundColor: Colors.blue,
+                    ),
+                    title: Text(notification.title),
+                    subtitle: Text(notification.message),
+                  ),
                 );
               },
-            );
-          }
-        },
-      ),
+            ),
     );
   }
 }
