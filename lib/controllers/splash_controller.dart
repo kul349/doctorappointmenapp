@@ -15,19 +15,33 @@ class SplashController extends GetxController {
 
     final token = await TokenService().getToken();
     if (token != null) {
+      // Check if token is expired
+      bool isExpired = JwtDecoder.isExpired(token);
+
+      if (isExpired) {
+        // Handle expired token: check user type and redirect to login
+        final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+        final bool isDoctor = decodedToken.containsKey('doctorName') ||
+            decodedToken.containsKey('specialization');
+
+        if (isDoctor) {
+          Get.offAllNamed(AppRoutes.DOCTOR_LOGIN); // Redirect to doctor login
+        } else {
+          Get.offAllNamed(AppRoutes.PATIENT_LOGIN); // Redirect to patient login
+        }
+        return; // Exit to stop further execution
+      }
+
       try {
-        print(token);
         // Decode the token and print the entire content
         final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
         print("Decoded token: $decodedToken");
 
         String? doctorId = decodedToken['_id'];
-        print("Got doctorId: $doctorId");
 
-        // Check for specific fields
+        // Check for specific fields to determine role
         final bool isDoctor = decodedToken.containsKey('doctorName') ||
             decodedToken.containsKey('specialization');
-
         final bool isPatient =
             decodedToken.containsKey('userName') && !isDoctor;
 
@@ -38,9 +52,9 @@ class SplashController extends GetxController {
             arguments: {'doctorId': doctorId},
           );
         } else if (isPatient) {
-          String? patientId = decodedToken['_id'];
-          print("Got patient: $patientId");
-          Get.offAllNamed(AppRoutes.HOMESCREEN);
+          Get.offAllNamed(
+            AppRoutes.HOMESCREEN,
+          );
         } else {
           Get.offAllNamed(AppRoutes.HOME);
         }
@@ -49,7 +63,7 @@ class SplashController extends GetxController {
         Get.offAllNamed(AppRoutes.HOME);
       }
     } else {
-      Get.offAllNamed(AppRoutes.HOME);
+      Get.offAllNamed(AppRoutes.HOME); // Redirect to home if no token
     }
   }
 }

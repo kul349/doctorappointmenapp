@@ -15,33 +15,6 @@ class AuthController extends GetxController {
   var patientId =
       ''.obs; // Add this line to create an observable for patient ID
 
-  Future<void> checkUserLoginStatus() async {
-    final token = await _tokenService.getToken();
-
-    if (token != null && token.isNotEmpty) {
-      print('Token found: $token');
-
-      // Decode the token and extract the userId
-      final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-      String? id = decodedToken['_id']; // Assuming '_id' holds the userId
-
-      if (id != null && id.isNotEmpty) {
-        patientId.value = id; // Store the userId in the observable
-        print('User ID: ${patientId.value}');
-
-        // Navigate to the home screen with the patientId
-        Get.offAllNamed(AppRoutes.HOMESCREEN,
-            parameters: {'patientId': patientId.value});
-      } else {
-        print('User ID not found in token');
-        Get.offAllNamed(AppRoutes.HOME);
-      }
-    } else {
-      print('Token not found');
-      Get.offAllNamed(AppRoutes.HOME);
-    }
-  }
-
   Future<void> loginUser(String email, String password) async {
     try {
       final user = await _authService.login(email, password);
