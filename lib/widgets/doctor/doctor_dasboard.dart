@@ -1,17 +1,21 @@
 import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/services/doctor/login_authservice.dart';
+import 'package:doctorappointmenapp/widgets/doctor/profile_update.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 
 class DoctorDashboardView extends StatelessWidget {
-  final DoctorLoginAuthService _authService =
-      DoctorLoginAuthService(); // Instance of Auth Service
+  final DoctorLoginAuthService _authService = DoctorLoginAuthService();
+
+  DoctorDashboardView({super.key}); // Instance of Auth Service
 
   @override
   Widget build(BuildContext context) {
     // Retrieve doctorId from the arguments
     final String doctorId = Get.arguments['doctorId'] ?? '';
+    final String doctorName = Get.arguments['doctorName'] ?? "";
+    print("doctorName:${doctorName}");
 
     return Scaffold(
       appBar: AppBar(
@@ -34,6 +38,49 @@ class DoctorDashboardView extends StatelessWidget {
             },
           ),
         ],
+      ),
+      drawer: Container(
+        width: 200,
+        child: Drawer(
+          child: ListView(
+            children: [
+              SizedBox(
+                height: 100,
+                child: DrawerHeader(
+                    child: CircleAvatar(
+                  backgroundColor: kRedLightColor,
+                  child: Text(doctorName[0].toUpperCase(),
+                      style:
+                          const TextStyle(fontSize: 30, color: greyBoldColor)),
+                )),
+              ),
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text("My Profile"),
+                onTap: () {
+                  print("navigate to my profile");
+                  Get.toNamed(AppRoutes.doctorProfileUpdate,
+                      arguments: {"doctorId": doctorId});
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout_outlined),
+                title:
+                    const Text('Logout', style: TextStyle(color: Colors.red)),
+                onTap: () async {
+                  try {
+                    await _authService
+                        .doctorLogout(); // Call the logout function
+                    Get.offAllNamed(
+                        AppRoutes.HOME); // Navigate to login page after logout
+                  } catch (e) {
+                    Get.snackbar("Error", "Logout failed. Please try again.");
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

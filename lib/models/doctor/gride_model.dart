@@ -8,6 +8,7 @@ class DoctorModel {
    double averageRating;
    int totalRatings;
   String availabilityStatus;
+  
 
   // New fields for update
    String? licenseNumber;

@@ -1,12 +1,10 @@
-import 'dart:convert';
 import 'package:doctorappointmenapp/models/doctor/gride_model.dart';
-import 'package:doctorappointmenapp/services/token_service.dart';
-import 'package:doctorappointmenapp/utils/constant.dart';
+import 'package:doctorappointmenapp/services/doctor/update_doctorProfile_service.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
-class DoctorController extends GetxController {
-  final TokenService _tokenService = TokenService();
+class DoctorProfileUpdateController extends GetxController {
+  final UpdateDoctorprofileService _doctorService =
+      UpdateDoctorprofileService();
   var doctor = DoctorModel(
     id: '',
     fullName: '',
@@ -17,32 +15,48 @@ class DoctorController extends GetxController {
     averageRating: 0,
     totalRatings: 0,
     availabilityStatus: '',
+    clinicAddress: null, // Ensure these are included in the model
+    licenseNumber: null,
+    consultationFee: 0.0,
+    
+    bio: null,
+    clinicName: null,
+    locationCoordinates: null,
   ).obs;
 
   var isLoading = false.obs;
-  final String apiUrl = '$baseUrl/doctor/updateDoctor';
+  var errorMessage = ''.obs; // Variable to hold error messages
 
-  // Fetch doctor details (already implemented as shown before)
+  // Fetch doctor profile by ID
+  Future<void> fetchDoctorProfile(String doctorId) async {
+    isLoading(true);
+    errorMessage(''); // Reset error message
+    try {
+      final doctorData = await _doctorService.fetchDoctorProfile(doctorId);
+      if (doctorData != null) {
+        doctor.value =
+            doctorData; // Directly assign the fetched doctor profile to the observable
+      } else {
+        errorMessage(
+            'Doctor not found.'); // Handle the case when no data is returned
+      }
+    } catch (error) {
+      print('Error fetching profile: $error');
+      errorMessage(
+          'Error fetching profile: $error'); // Update the error message
+    } finally {
+      isLoading(false);
+    }
+  }
 
   // Update doctor profile
   Future<void> updateDoctorProfile(Map<String, dynamic> updates) async {
-    isLoading(true); // Show loading indicator
+    isLoading(true);
+    errorMessage(''); // Reset error message
     try {
-      final token = await _tokenService.getToken();
-
-      final response = await http.put(
-        Uri.parse(
-            '$apiUrl/${doctor.value.id}'), // Construct API endpoint with doctor ID
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token', // Send the token in headers
-        },
-        body: jsonEncode(updates), // Convert updates map to JSON
-      );
-
-      if (response.statusCode == 200) {
-        // Parse the updated doctor data from the response
-        var updatedData = json.decode(response.body);
+      final updatedData =
+          await _doctorService.updateDoctorProfile(doctor.value.id, updates);
+      if (updatedData != null) {
         doctor.update((doc) {
           doc?.fullName = updatedData['fullName'];
           doc?.email = updatedData['email'];
@@ -61,14 +75,15 @@ class DoctorController extends GetxController {
         });
         Get.snackbar("Success", "Profile updated successfully");
       } else {
-        // Handle non-200 status code
-        Get.snackbar("Error", "Failed to update profile");
+        errorMessage(
+            'Failed to update profile.'); // Handle the null return case
       }
     } catch (error) {
       print('Error updating profile: $error');
-      Get.snackbar("Error", "An error occurred while updating the profile");
+      errorMessage(
+          'Error updating profile: $error'); // Update the error message
     } finally {
-      isLoading(false); // Hide loading indicator
+      isLoading(false);
     }
   }
 }

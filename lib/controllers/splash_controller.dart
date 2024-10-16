@@ -38,6 +38,8 @@ class SplashController extends GetxController {
         print("Decoded token: $decodedToken");
 
         String? doctorId = decodedToken['_id'];
+        String? doctorName = decodedToken['doctorName'];
+        print(doctorName);
 
         // Check for specific fields to determine role
         final bool isDoctor = decodedToken.containsKey('doctorName') ||
@@ -49,7 +51,7 @@ class SplashController extends GetxController {
         if (isDoctor) {
           Get.offAllNamed(
             AppRoutes.doctoDashboardView,
-            arguments: {'doctorId': doctorId},
+            arguments: {'doctorId': doctorId, "doctorName": doctorName},
           );
         } else if (isPatient) {
           Get.offAllNamed(

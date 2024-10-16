@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:doctorappointmenapp/controllers/BottomNavController.dart';
 import 'package:doctorappointmenapp/controllers/auth_controller.dart';
+import 'package:doctorappointmenapp/controllers/doctor/doctordashboard_controller.dart';
 import 'package:doctorappointmenapp/controllers/doctor_menu_controller.dart';
 import 'package:doctorappointmenapp/controllers/patient_getalldoctor_controller.dart';
 import 'package:doctorappointmenapp/services/localnotification.dart';
@@ -32,7 +33,7 @@ void main() async {
   Get.put(DoctorMenuController());
   Get.put(BottomNavController());
   Get.put(DoctorController());
-
+  Get.put(DoctorProfileUpdateController());
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Firebase
@@ -42,7 +43,7 @@ void main() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
   final InitializationSettings initializationSettings =
-     InitializationSettings(android: initializationSettingsAndroid);
+      InitializationSettings(android: initializationSettingsAndroid);
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 

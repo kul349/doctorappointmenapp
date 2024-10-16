@@ -9,6 +9,7 @@ import 'package:doctorappointmenapp/views/registration/regitster_doct.dart';
 import 'package:doctorappointmenapp/widgets/doctor/appointment_list.dart';
 import 'package:doctorappointmenapp/widgets/doctor/doctor_dasboard.dart';
 import 'package:doctorappointmenapp/widgets/doctor/doctor_notificaiton.dart';
+import 'package:doctorappointmenapp/widgets/doctor/profile_update.dart';
 import 'package:doctorappointmenapp/widgets/doctor/rating_review_list.dart';
 import 'package:get/get.dart';
 import '../views/splash/splash_view.dart';
@@ -32,6 +33,7 @@ class AppRoutes {
   static const patientAppointmentView = '/patientAppointmentView';
   static const doctornotificationview = '/doctornotificationview';
   static const reviewRating = '/reviewRating';
+  static const doctorProfileUpdate = '/doctorProfileUpdate';
   static final routes = [
     GetPage(
       name: splash,
@@ -103,5 +105,12 @@ class AppRoutes {
         Get.arguments['doctorId'],
       ),
     ),
+    GetPage(
+        name: doctorProfileUpdate,
+        page: () {
+          final String doctorId = Get.arguments['doctorId'];
+          print("doctorIdasd :${doctorId}"); // Correct way to retrieve
+          return DoctorProfile(doctorId: doctorId);
+        })
   ];
 }
