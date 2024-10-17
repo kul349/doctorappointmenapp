@@ -9,6 +9,7 @@ import 'package:doctorappointmenapp/views/registration/regitster_doct.dart';
 import 'package:doctorappointmenapp/widgets/doctor/appointment_list.dart';
 import 'package:doctorappointmenapp/widgets/doctor/doctor_dasboard.dart';
 import 'package:doctorappointmenapp/widgets/doctor/doctor_notificaiton.dart';
+import 'package:doctorappointmenapp/widgets/doctor/edit_doctor_profile.dart';
 import 'package:doctorappointmenapp/widgets/doctor/profile_update.dart';
 import 'package:doctorappointmenapp/widgets/doctor/rating_review_list.dart';
 import 'package:get/get.dart';
@@ -28,6 +29,7 @@ class AppRoutes {
   static const NOTIFICATION =
       '/notifications'; // Remove the space before 'notifications'
   static const addRating = '/addRating';
+  static const editDoctorProfile = '/editDoctorProfile';
   // List of GetPages that defines the routes and their corresponding views
   static const doctoDashboardView = '/dashboard';
   static const patientAppointmentView = '/patientAppointmentView';
@@ -90,13 +92,13 @@ class AppRoutes {
               doctorId: Get.arguments['doctorId'],
             )),
     GetPage(
-      name: AppRoutes
-          .doctornotificationview, // Ensure this matches the route name
+      name: AppRoutes.doctornotificationview,
       page: () {
-        final String doctorId = Get.arguments; // Retrieve the passed argument
-        return DoctorNotificationPage(
-          userId: doctorId, // Pass the doctorId to the DoctorNotificationPage
-        );
+        // Ensure you are receiving a Map
+        final Map<String, String> args = Get.arguments as Map<String, String>;
+        final String doctorId =
+            args['doctorId'] ?? ''; // Retrieve doctorId from the map
+        return DoctorNotificationPage(userId: doctorId);
       },
     ),
     GetPage(
@@ -111,6 +113,13 @@ class AppRoutes {
           final String doctorId = Get.arguments['doctorId'];
           print("doctorIdasd :${doctorId}"); // Correct way to retrieve
           return DoctorProfile(doctorId: doctorId);
+        }),
+    GetPage(
+        name: editDoctorProfile,
+        page: () {
+          final String doctorId = Get.arguments['doctorId'];
+          print("doctorIdasd :${doctorId}"); // Correct way to retrieve
+          return const EditDoctorProfile();
         })
   ];
 }

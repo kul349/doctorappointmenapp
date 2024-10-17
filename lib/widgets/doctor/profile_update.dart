@@ -1,4 +1,5 @@
 import 'package:doctorappointmenapp/controllers/doctor/doctordashboard_controller.dart';
+import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,10 @@ class _DoctorProfileState extends State<DoctorProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final String doctorId = Get.arguments['doctorId'] ?? '';
+
     return Scaffold(
+      backgroundColor: kGreenLightColor,
       appBar: AppBar(
         title: const Text("Doctor Profile"),
       ),
@@ -41,97 +45,94 @@ class _DoctorProfileState extends State<DoctorProfile> {
         return ListView(
           children: [
             // Top container with background color and avatar in between
-            Stack(
-              clipBehavior: Clip.none,
+            Column(
               children: [
                 // Top background container
-                Container(
+                SizedBox(
                   height: 200,
-                  color: kGreenLightColor, // Background color for the top
-                ),
-
-                // Positioned avatar in between top and bottom containers
-                Positioned(
-                  top: 40, // Adjust position to overlap containers
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: CircleAvatar(
-                      radius: 50, // Set the size of the avatar
-                      backgroundImage: NetworkImage(
-                          doctorController.doctor.value.avatar), // Avatar image
-                    ),
+                  width: MediaQuery.sizeOf(context).width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 50, // Set the size of the avatar
+                        backgroundImage: NetworkImage(
+                          doctorController.doctor.value.avatar,
+                        ), // Avatar image
+                      ),
+                      const SizedBox(height: 10), // Spacing below the avatar
+                      Text(
+                        doctorController.doctor.value.fullName,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
-                // Bottom container with rounded top corners
-                Positioned(
-                  top: 150,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
+                // Bottom container with profile details
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        spreadRadius: 5,
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          spreadRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 40), // For spacing from avatar
-                        _buildCustomListTile(
-                          icon: Icons.person,
-                          title:
-                              "Full Name: ${doctorController.doctor.value.fullName}",
-                        ),
-                        _buildCustomListTile(
-                          icon: Icons.email,
-                          title:
-                              "Email: ${doctorController.doctor.value.email}",
-                        ),
-                        _buildCustomListTile(
-                          icon: Icons.medical_services,
-                          title:
-                              "Doctor Name: ${doctorController.doctor.value.doctorName}",
-                        ),
-                        _buildCustomListTile(
-                          icon: Icons.local_hospital,
-                          title:
-                              "Specialization: ${doctorController.doctor.value.specialization}",
-                        ),
-                        _buildCustomListTile(
-                          icon: Icons.location_on,
-                          title:
-                              "Clinic Address: ${doctorController.doctor.value.clinicAddress ?? 'Not Available'}",
-                        ),
-                        _buildCustomListTile(
-                          icon: Icons.card_membership,
-                          title:
-                              "License Number: ${doctorController.doctor.value.licenseNumber ?? 'Not Available'}",
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Trigger update profile with the new data
-                            doctorController.updateDoctorProfile({
-                              "clinicAddress":
-                                  "New Clinic Address", // Modify as needed
-                              "licenseNumber": "123456789", // Modify as needed
-                            });
-                          },
-                          child: const Text("Update Profile"),
-                        ),
-                      ],
-                    ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20), // For spacing from avatar
+                      _buildCustomListTile(
+                        icon: Icons.person,
+                        title:
+                            "Full Name: ${doctorController.doctor.value.fullName}",
+                      ),
+                      _buildCustomListTile(
+                        icon: Icons.email,
+                        title: "Email: ${doctorController.doctor.value.email}",
+                      ),
+                      _buildCustomListTile(
+                        icon: Icons.medical_services,
+                        title:
+                            "Doctor Name: ${doctorController.doctor.value.doctorName}",
+                      ),
+                      _buildCustomListTile(
+                        icon: Icons.local_hospital,
+                        title:
+                            "Specialization: ${doctorController.doctor.value.specialization}",
+                      ),
+                      _buildCustomListTile(
+                        icon: Icons.location_on,
+                        title:
+                            "Clinic Address: ${doctorController.doctor.value.clinicAddress ?? 'Not Available'}",
+                      ),
+                      _buildCustomListTile(
+                        icon: Icons.card_membership,
+                        title:
+                            "License Number: ${doctorController.doctor.value.licenseNumber ?? 'Not Available'}",
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          print("going to editdoctorProfile:");
+                          Get.offNamed(AppRoutes.editDoctorProfile, arguments: {
+                            "doctorId": doctorId,
+                          });
+                        },
+                        child: const Text("Update Profile"),
+                      ),
+                    ],
                   ),
                 ),
               ],

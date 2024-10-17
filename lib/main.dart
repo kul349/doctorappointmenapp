@@ -7,9 +7,7 @@ import 'package:doctorappointmenapp/controllers/doctor_menu_controller.dart';
 import 'package:doctorappointmenapp/controllers/patient_getalldoctor_controller.dart';
 import 'package:doctorappointmenapp/services/localnotification.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
-import 'package:doctorappointmenapp/utils/constant.dart';
-import 'package:doctorappointmenapp/views/notification/notification.dart';
-import 'package:doctorappointmenapp/widgets/doctor/doctor_notificaiton.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';

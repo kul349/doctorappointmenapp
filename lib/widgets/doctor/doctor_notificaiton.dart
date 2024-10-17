@@ -58,7 +58,7 @@ class _DoctorNotificationPageState extends State<DoctorNotificationPage> {
 
                     // Show a confirmation Snackbar
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Notification dismissed')),
+                      const SnackBar(content: Text('Notification dismissed')),
                     );
                   },
                   background: Container(
