@@ -1,176 +1,210 @@
-import 'package:doctorappointmenapp/controllers/doctor/doctordashboard_controller.dart';
+import 'dart:io';
+import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:doctorappointmenapp/models/doctor/gride_model.dart';
-import 'package:image_picker/image_picker.dart'; // Import image_picker package
-import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:doctorappointmenapp/controllers/doctor/doctordashboard_controller.dart';
 
-class EditDoctorProfile extends StatefulWidget {
-  const EditDoctorProfile({super.key});
+class EditDoctorProfilePage extends StatelessWidget {
+  final DoctorProfileUpdateController controller =
+      Get.put(DoctorProfileUpdateController());
 
-  @override
-  State<EditDoctorProfile> createState() => _EditDoctorProfileState();
-}
-
-class _EditDoctorProfileState extends State<EditDoctorProfile> {
-  final DoctorProfileUpdateController doctorController = Get.find();
-  final _formKey = GlobalKey<FormState>();
-  late DoctorModel doctor;
-  File? _image; // Variable to hold the selected image
-
-  @override
-  void initState() {
-    super.initState();
-    doctor = doctorController.doctor.value;
-    final arguments = Get.arguments;
-    final doctorId = arguments['doctorId'];
-    print("doctorId for edit: $doctorId");
-    // Optionally, you can fetch doctor data using doctorId here if necessary
-  }
-
-  Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-  }
-
-  Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      // Show loading indicator
-      final loadingDialog = Get.dialog(
-        const Center(child: CircularProgressIndicator()),
-        barrierDismissible: false,
-      );
-
-      try {
-        // Attempt to update the doctor profile
-        await doctorController.updateDoctorProfile({
-          "fullName": doctor.fullName,
-          "doctorName": doctor.doctorName,
-          "clinicAddress": doctor.clinicAddress,
-          "licenseNumber": doctor.licenseNumber,
-          "consultationFee": doctor.consultationFee,
-          "bio": doctor.bio,
-          "clinicName": doctor.clinicName,
-          // Include the image if it's selected
-          "avatar": _image != null ? _image!.path : doctor.avatar,
-        });
-
-        // Close the loading dialog
-        Get.back(); // Close loading dialog
-
-        // Optionally show a success message
-        Get.snackbar("Success", "Profile updated successfully");
-
-        // Delay the navigation to allow Snackbar to be displayed
-        await Future.delayed(const Duration(seconds: 2));
-
-        // Navigate back to the previous page (ensure this is correct)
-        Get.offAllNamed('/profile'); // Change this to your profile route
-      } catch (e) {
-        // Close loading dialog on error
-        Get.back(); // Close loading dialog
-        Get.snackbar("Error", "Failed to update the profile: $e");
-      }
-    }
-  }
+  EditDoctorProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final String doctorId = Get.arguments['doctorId'];
+    print("Retrieved doctorId: $doctorId");
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit Doctor Profile")),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: _pickImage,
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: _image != null
-                      ? FileImage(_image!)
-                      : doctor.avatar.isNotEmpty
-                          ? NetworkImage(doctor.avatar)
-                          : const AssetImage('assets/placeholder.jpg')
-                              as ImageProvider,
-                  child: const Icon(Icons.edit),
+      appBar: AppBar(
+        title: const Text('Edit Profile'),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+        elevation: 0,
+      ),
+      body: Obx(() {
+        return controller.isLoading.value
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Section Title
+                    const Text(
+                      'Personal Information',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Full Name Field
+                    _buildTextField(
+                      controller.fullNameController,
+                      'Full Name',
+                      Icons.person_outline,
+                    ),
+                    const SizedBox(height: 16),
+                    // Doctor Name Field
+                    _buildTextField(
+                      controller.doctorNameController,
+                      'Doctor Name',
+                      Icons.badge_outlined,
+                    ),
+                    const SizedBox(height: 16),
+                    // Clinic Name Field
+                    _buildTextField(
+                      controller.clinicNameController,
+                      'Clinic Name',
+                      Icons.local_hospital_outlined,
+                    ),
+                    const SizedBox(height: 16),
+                    // Avatar Image Picker
+                    _buildImagePicker(controller),
+                    const SizedBox(height: 32),
+                    // Section Title
+                    const Text(
+                      'Clinic Information',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Clinic Address Field
+                    _buildTextField(
+                      controller.clinicAddressController,
+                      'Clinic Address',
+                      Icons.location_on_outlined,
+                    ),
+                    const SizedBox(height: 16),
+                    // License Number Field
+                    _buildTextField(
+                      controller.licenseNumberController,
+                      'License Number',
+                      Icons.verified_outlined,
+                    ),
+                    const SizedBox(height: 16),
+                    // Consultation Fee Field
+                    _buildTextField(
+                      controller.consultationFeeController,
+                      'Consultation Fee',
+                      Icons.attach_money_outlined,
+                      TextInputType.number,
+                    ),
+                    const SizedBox(height: 16),
+                    // Bio Field
+                    _buildTextField(
+                      controller.bioController,
+                      'Bio',
+                      Icons.info_outline,
+                      TextInputType.text,
+                    ),
+                    const SizedBox(height: 30),
+                    // Update Button
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (controller.fullNameController.text.isEmpty ||
+                              controller.doctorNameController.text.isEmpty ||
+                              controller.clinicNameController.text.isEmpty) {
+                            Get.snackbar(
+                                'Error', 'Please fill in all required fields.');
+                            return;
+                          }
+                          // Update Profile
+                          controller.updateProfile(doctorId);
+                          print(
+                              "Navigating to profile with doctorId: $doctorId");
+                          Get.toNamed(AppRoutes.doctorProfileUpdate,
+                              arguments: {'doctorId': doctorId});
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 16),
+                          backgroundColor: Colors.blueAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Text(
+                          'Update Profile',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 20),
-              _buildTextFormField(
-                label: 'Full Name',
-                initialValue: doctor.fullName,
-                onSaved: (value) => doctor.fullName = value!,
-              ),
-              _buildTextFormField(
-                label: 'Doctor Name',
-                initialValue: doctor.doctorName,
-                onSaved: (value) => doctor.doctorName = value!,
-              ),
-              _buildTextFormField(
-                label: 'Clinic Address',
-                initialValue: doctor.clinicAddress ?? '',
-                onSaved: (value) => doctor.clinicAddress = value!,
-              ),
-              _buildTextFormField(
-                label: 'License Number',
-                initialValue: doctor.licenseNumber ?? '',
-                onSaved: (value) => doctor.licenseNumber = value!,
-              ),
-              _buildTextFormField(
-                label: 'Consultation Fee',
-                initialValue: doctor.consultationFee.toString(),
-                onSaved: (value) =>
-                    doctor.consultationFee = double.tryParse(value!) ?? 0,
-              ),
-              _buildTextFormField(
-                label: 'Bio',
-                initialValue: doctor.bio ?? '',
-                maxLines: 3,
-                onSaved: (value) => doctor.bio = value!,
-              ),
-              _buildTextFormField(
-                label: 'Clinic Name',
-                initialValue: doctor.clinicName ?? '',
-                onSaved: (value) => doctor.clinicName = value!,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text("Save Changes"),
-              ),
-            ],
-          ),
+              );
+      }),
+    );
+  }
+
+  // Helper to build text fields
+  Widget _buildTextField(
+    TextEditingController controller,
+    String labelText,
+    IconData icon, [
+    TextInputType inputType = TextInputType.text,
+    int maxLines = 1,
+  ]) {
+    return TextField(
+      controller: controller,
+      keyboardType: inputType,
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        labelText: labelText,
+        prefixIcon: Icon(icon, color: Colors.blueAccent),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
+        filled: true,
+        fillColor: Colors.grey[200],
       ),
     );
   }
 
-  Widget _buildTextFormField({
-    required String label,
-    required String initialValue,
-    int maxLines = 1,
-    required Function(String?) onSaved,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        initialValue: initialValue,
-        maxLines: maxLines,
-        decoration: InputDecoration(labelText: label),
-        onSaved: onSaved,
-        validator: (value) => value!.isEmpty ? 'Please enter $label' : null,
-      ),
+  // Helper to build the image picker button
+  Widget _buildImagePicker(DoctorProfileUpdateController controller) {
+    return Column(
+      children: [
+        ElevatedButton.icon(
+          onPressed: () async {
+            final pickedFile =
+                await ImagePicker().pickImage(source: ImageSource.gallery);
+            if (pickedFile != null) {
+              controller.avatarFile = File(pickedFile.path);
+              Get.snackbar('Image Selected', 'Avatar has been selected.');
+            } else {
+              Get.snackbar('No Image', 'Please select an avatar image.');
+            }
+          },
+          icon: const Icon(Icons.image_outlined),
+          label: const Text('Choose Avatar'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blueAccent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+          ),
+        ),
+        const SizedBox(height: 8),
+        if (controller.avatarFile != null)
+          Image.file(
+            controller.avatarFile!,
+            height: 100,
+            width: 100,
+            fit: BoxFit.cover,
+          )
+      ],
     );
   }
 }

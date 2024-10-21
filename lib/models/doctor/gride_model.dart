@@ -1,24 +1,22 @@
 class DoctorModel {
-   String id;
-   String fullName;
-   String avatar;
-   String email;
-   String doctorName;
-   String specialization;
-   double averageRating;
-   int totalRatings;
+  String id; // Corresponds to _id in MongoDB
+  String fullName;
+  String avatar;
+  String email;
+  String doctorName;
+  String specialization;
+  double averageRating; // From ratingsSummary.averageRating
+  int totalRatings; // From ratingsSummary.totalRatings
   String availabilityStatus;
-  
-
-  // New fields for update
-   String? licenseNumber;
-   String? bio;
-   String? clinicName;
-   String? clinicAddress;
-   double? consultationFee;
-   List<double>? locationCoordinates;
+  String? licenseNumber;
+  String? bio;
+  String? clinicName;
+  String? clinicAddress;
+  double? consultationFee;
+  List<double>? locationCoordinates; // For location.coordinates field
 
   DoctorModel({
+    required this.id,
     required this.fullName,
     required this.avatar,
     required this.email,
@@ -27,7 +25,6 @@ class DoctorModel {
     required this.averageRating,
     required this.totalRatings,
     required this.availabilityStatus,
-    required this.id,
     this.licenseNumber,
     this.bio,
     this.clinicName,
@@ -36,11 +33,12 @@ class DoctorModel {
     this.locationCoordinates,
   });
 
+  // Factory constructor to create an instance from JSON
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     final ratingsSummary = json['ratingsSummary'] ?? {};
 
     return DoctorModel(
-      id: json['_id'] ?? "",
+      id: json['_id'] ?? '',
       fullName: json['fullName'] ?? '',
       avatar: json['avatar'] ?? '',
       email: json['email'] ?? '',
@@ -49,21 +47,24 @@ class DoctorModel {
       averageRating: (ratingsSummary['averageRating'] ?? 0).toDouble(),
       totalRatings: (ratingsSummary['totalRatings'] ?? 0).toInt(),
       availabilityStatus: json['availabilityStatus'] ?? 'unknown',
-
-      // Fetching the new fields if present in the JSON
-      licenseNumber: json['licenseNumber'] ?? '',
-      bio: json['bio'] ?? '',
-      clinicName: json['clinicName'] ?? '',
-      clinicAddress: json['clinicAddress'] ?? '',
-      consultationFee: (json['consultationFee'] ?? 0).toDouble(),
-      locationCoordinates: (json['location'] != null && json['location']['coordinates'] != null)
-          ? List<double>.from(json['location']['coordinates'].map((e) => e.toDouble()))
+      licenseNumber: json['licenseNumber'],
+      bio: json['bio'],
+      clinicName: json['clinicName'],
+      clinicAddress: json['clinicAddress'],
+      consultationFee: json['consultationFee'] != null
+          ? (json['consultationFee']).toDouble()
           : null,
+      locationCoordinates:
+          (json['location'] != null && json['location']['coordinates'] != null)
+              ? List<double>.from(
+                  json['location']['coordinates'].map((e) => e.toDouble()))
+              : null,
     );
   }
 
+  // Method to convert an instance to JSON
   Map<String, dynamic> toJson() {
-    return {
+    final Map<String, dynamic> data = {
       'fullName': fullName,
       'avatar': avatar,
       'email': email,
@@ -74,17 +75,20 @@ class DoctorModel {
         'totalRatings': totalRatings,
       },
       'availabilityStatus': availabilityStatus,
-      'licenseNumber': licenseNumber,
-      'bio': bio,
-      'clinicName': clinicName,
-      'clinicAddress': clinicAddress,
-      'consultationFee': consultationFee,
-      'location': locationCoordinates != null
-          ? {
-              'coordinates': locationCoordinates,
-            }
-          : null,
-      "_id": id,
+      '_id': id,
     };
+
+    if (licenseNumber != null) data['licenseNumber'] = licenseNumber;
+    if (bio != null) data['bio'] = bio;
+    if (clinicName != null) data['clinicName'] = clinicName;
+    if (clinicAddress != null) data['clinicAddress'] = clinicAddress;
+    if (consultationFee != null) data['consultationFee'] = consultationFee;
+    if (locationCoordinates != null) {
+      data['location'] = {
+        'coordinates': locationCoordinates,
+      };
+    }
+
+    return data;
   }
 }

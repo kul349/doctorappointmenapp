@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:doctorappointmenapp/models/doctor/gride_model.dart';
 import 'package:doctorappointmenapp/services/doctor/update_doctorprofile_service.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DoctorProfileUpdateController extends GetxController {
@@ -29,7 +30,19 @@ class DoctorProfileUpdateController extends GetxController {
   var isLoading = false.obs;
   var errorMessage = ''.obs; // Variable to hold error messages
 
-  // Fetch doctor profile by ID
+  // Form fields for profile
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController doctorNameController = TextEditingController();
+  TextEditingController clinicNameController = TextEditingController();
+  TextEditingController clinicAddressController = TextEditingController();
+  TextEditingController licenseNumberController = TextEditingController();
+  TextEditingController consultationFeeController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
+
+  // File for avatar upload
+  File? avatarFile;
+
+  // Fetch doctor profile by ID and pre-populate form fields
   Future<void> fetchDoctorProfile(String doctorId) async {
     isLoading(true);
     errorMessage(''); // Reset error message
@@ -37,6 +50,16 @@ class DoctorProfileUpdateController extends GetxController {
       final doctorData = await _doctorService.fetchDoctorProfile(doctorId);
       if (doctorData != null) {
         doctor.value = doctorData; // Assign fetched data
+
+        // Populate form fields with existing data
+        fullNameController.text = doctorData.fullName ?? '';
+        doctorNameController.text = doctorData.doctorName ?? '';
+        clinicNameController.text = doctorData.clinicName ?? '';
+        clinicAddressController.text = doctorData.clinicAddress ?? '';
+        licenseNumberController.text = doctorData.licenseNumber ?? '';
+        consultationFeeController.text =
+            doctorData.consultationFee?.toString() ?? '0.0';
+        bioController.text = doctorData.bio ?? '';
       } else {
         errorMessage(
             'Doctor not found.'); // Handle case when no data is returned
@@ -49,33 +72,43 @@ class DoctorProfileUpdateController extends GetxController {
     }
   }
 
-  Future<void> updateDoctorProfile(Map<String, dynamic> updates,
-      {File? avatar}) async {
-    isLoading(true);
-    errorMessage(''); // Reset error message
-    try {
-      final updatedData = await _doctorService.updateDoctorProfileWithAvatar(
-        doctor.value.id,
-        updates,
-        avatar,
-      );
+  // Method to update the doctor profile
+  Future<void> updateProfile(String doctorId) async {
+    isLoading.value = true;
 
-      if (updatedData != null) {
-        doctor.update((doc) {
-          doc?.fullName = updatedData['fullName'];
-          // ... (update other fields)
-          doc?.avatar = updatedData['avatar']; // Update avatar if returned
-        });
-        Get.snackbar("Success", "Profile updated successfully");
-        Get.back(); // Navigate back to the previous page
-      } else {
-        errorMessage('Failed to update profile.'); // Handle null return case
-      }
-    } catch (error) {
-      print('Error updating profile: $error');
-      errorMessage('Error updating profile: $error'); // Update error message
+    try {
+      Map<String, dynamic> updates = {
+        'fullName': fullNameController.text,
+        'doctorName': doctorNameController.text,
+        'clinicName': clinicNameController.text,
+        'clinicAddress': clinicAddressController.text,
+        'licenseNumber': licenseNumberController.text,
+        'consultationFee':
+            double.tryParse(consultationFeeController.text) ?? 0.0,
+        'bio': bioController.text,
+      };
+
+      // Call service to update profile
+      await UpdateDoctorProfileService()
+          .updateDoctorProfile(doctorId, updates, avatarFile);
+      Get.snackbar('Success', 'Profile updated successfully');
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to update profile: $e');
     } finally {
-      isLoading(false); // Stop loading regardless of success or failure
+      isLoading.value = false;
     }
+  }
+
+  @override
+  void onClose() {
+    // Dispose controllers when the controller is closed to prevent memory leaks
+    fullNameController.dispose();
+    doctorNameController.dispose();
+    clinicNameController.dispose();
+    clinicAddressController.dispose();
+    licenseNumberController.dispose();
+    consultationFeeController.dispose();
+    bioController.dispose();
+    super.onClose();
   }
 }

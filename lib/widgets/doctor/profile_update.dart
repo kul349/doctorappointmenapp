@@ -128,6 +128,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                           print("going to editdoctorProfile:");
                           Get.offNamed(AppRoutes.editDoctorProfile, arguments: {
                             "doctorId": doctorId,
+                            
                           });
                         },
                         child: const Text("Update Profile"),

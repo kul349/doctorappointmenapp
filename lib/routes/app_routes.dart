@@ -115,11 +115,15 @@ class AppRoutes {
           return DoctorProfile(doctorId: doctorId);
         }),
     GetPage(
-        name: editDoctorProfile,
-        page: () {
-          final String doctorId = Get.arguments['doctorId'];
-          print("doctorIdasd :${doctorId}"); // Correct way to retrieve
-          return const EditDoctorProfile();
-        })
+      name: AppRoutes.editDoctorProfile,
+      page: () {
+        final String doctorId =
+            Get.arguments['doctorId']; // Correctly retrieving doctorId
+        print("doctorId: $doctorId"); // Logging to confirm
+        return EditDoctorProfilePage(
+          // doctorId: doctorId, // Passing doctorId to the widget
+        );
+      },
+    ),
   ];
 }
