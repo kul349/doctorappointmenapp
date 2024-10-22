@@ -4,7 +4,7 @@ class DoctorMenuController extends GetxController {
   // Observable list of doctor menu items
   var doctorMenu = <DoctorMenu>[
     DoctorMenu(name: 'Consultation', image: 'assets/svg/img-consultation.svg'),
-    DoctorMenu(name: 'dentist', image: 'assets/svg/img-dental.svg'),
+    DoctorMenu(name: 'Dentist', image: 'assets/svg/img-dental.svg'),
     DoctorMenu(name: 'Cardiology', image: 'assets/svg/img-heart.svg'),
     DoctorMenu(name: 'Hospitals', image: 'assets/svg/img-hospital.svg'),
     DoctorMenu(name: 'Medicines', image: 'assets/svg/img-medicine.svg'),

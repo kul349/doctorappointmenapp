@@ -80,7 +80,7 @@ Future<void> _handleNotificationTap(
   final token = await TokenService().getToken();
   if (token != null) {
     final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-    print("Decoded Token: $decodedToken");
+    print("Decoded Token for notification: $decodedToken");
 
     // Determine userType from the JWT token if not passed via payload
     if (userType == 'Unknown') {
