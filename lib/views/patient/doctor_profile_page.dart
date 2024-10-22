@@ -5,6 +5,7 @@ import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/services/bookappointment.dart';
 import 'package:doctorappointmenapp/services/token_service.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
+import 'package:doctorappointmenapp/utils/decode_patient_token.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:doctorappointmenapp/models/doctor/gride_model.dart';
@@ -109,10 +110,9 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
                               // Convert TimeOfDay to a string in HH:mm format
                               String formattedTimeSlot =
                                   "${selectedTime.hour}:${selectedTime.minute.toString().padLeft(2, '0')}";
-
-                              // Log the values before booking
-                              print(
-                                  'Patient ID: ${authController.patientId.value}');
+                              String? patientId = await TokenHelper
+                                  .getPatientId(); // Log the values before booking
+                              print('Patient ID: $patientId');
                               print('Doctor ID: ${controller.doctor.id}');
                               print('Formatted Date: $formattedDate');
                               print('Formatted Time Slot: $formattedTimeSlot');
@@ -133,7 +133,7 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
                                   AppRoutes.addRating,
                                   arguments: {
                                     'doctorId': controller.doctor.id,
-                                    "patientId": authController.patientId.value
+                                    "patientId": patientId
                                   },
                                 );
                               } catch (e) {
