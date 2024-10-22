@@ -11,8 +11,8 @@ class DoctorListPage extends StatelessWidget {
 
   DoctorListPage({
     required this.specialization,
-    Key? key,
-  }) : super(key: key) {
+    super.key,
+  }) {
     // Fetch doctors by the selected specialization
     doctorController.fetchDoctorsBySpecialization(specialization);
   }
@@ -21,7 +21,7 @@ class DoctorListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('$specialization'.toUpperCase()),
+        title: Text(specialization.toUpperCase()),
         centerTitle: true,
       ),
       body: Obx(() {
@@ -44,8 +44,8 @@ class DoctorListPage extends StatelessWidget {
             final DoctorModel doctor = doctorController.filteredDoctors[index];
 
             return Card(
-              color: kGreenLightColor,
-              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              color: mpurple,
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 02),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -84,10 +84,10 @@ class DoctorListPage extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            '${doctor.averageRating.toStringAsFixed(1)}',
+                            doctor.averageRating.toStringAsFixed(1),
                             style: const TextStyle(
                               fontSize: 20, // Font size for rating
-                              color: Colors.black, // Text color
+                              color: Colors.yellow, // Text color
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -106,7 +106,7 @@ class DoctorListPage extends StatelessWidget {
                   children: [
                     const SizedBox(height: 3),
                     Text(
-                      '${doctor.specialization}',
+                      doctor.specialization,
                       style: const TextStyle(fontSize: 20),
                     ),
                     const SizedBox(height: 5),
@@ -116,7 +116,7 @@ class DoctorListPage extends StatelessWidget {
                       style: const TextStyle(fontSize: 20),
                     ), // Display availability status
                     Text(
-                      'doctorId: ${doctor.id}',
+                      'clinicAddress: ${doctor.clinicAddress}',
                       style: const TextStyle(fontSize: 20),
                     ),
                   ],
