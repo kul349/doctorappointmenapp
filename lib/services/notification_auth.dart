@@ -17,6 +17,7 @@ Future<List<NotificationModel>> fetchNotifications(
 
     // Check if the request was successful (status code 200)
     if (response.statusCode == 200) {
+      print("notificatin send");
       // Decode the response body
       final List<dynamic> data = json.decode(response.body);
 
