@@ -1,3 +1,4 @@
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:doctorappointmenapp/views/notification/notification.dart';
 import 'package:doctorappointmenapp/views/patient/appointment.dart';
 import 'package:doctorappointmenapp/views/patient/get_ratting_page.dart';
@@ -16,78 +17,60 @@ import 'package:get/get.dart';
 import '../views/splash/splash_view.dart';
 import '../views/home_view.dart';
 
-class AppRoutes {
   // Define route names as static constants
-  static const splash = '/';
-  static const HOME = '/home';
-  static const patientRegister = '/patientRegister';
-  static const doctorRegister = '/doctor_register';
-  static const DOCTOR_LOGIN = '/doctor_login';
-  static const PATIENT_LOGIN = '/Patient_login';
-  static const HOMESCREEN = '/homescreen';
-  static const APPOINTMENTVIEW = '/apointmentsview';
-  static const NOTIFICATION =
-      '/notifications'; // Remove the space before 'notifications'
-  static const addRating = '/addRating';
-  static const editDoctorProfile = '/editDoctorProfile';
-  // List of GetPages that defines the routes and their corresponding views
-  static const doctoDashboardView = '/dashboard';
-  static const patientAppointmentView = '/patientAppointmentView';
-  static const doctornotificationview = '/doctornotificationview';
-  static const reviewRating = '/reviewRating';
-  static const doctorProfileUpdate = '/doctorProfileUpdate';
-  static final routes = [
+ 
+  List<GetPage> routes = [
     GetPage(
-      name: splash,
+      name: AppRoutes.splash,
       page: () => SplashView(),
     ),
     GetPage(
-      name: HOME,
+      name: AppRoutes.home,
       page: () => const HomeView(),
     ),
     GetPage(
-      name: patientRegister,
+      name: AppRoutes.patientRegister,
       page: () => const PatientRegisterView(),
     ),
     GetPage(
-      name: doctorRegister,
+      name: AppRoutes.doctorRegister,
       page: () => DoctorRegisterView(),
     ),
     GetPage(
-      name: DOCTOR_LOGIN,
+      name: AppRoutes.doctorLogin,
       page: () => DoctorLoginView(),
     ),
     GetPage(
-      name: PATIENT_LOGIN,
+      name: AppRoutes.patientLogin,
       page: () => const PatientLoginView(),
     ),
     GetPage(
-      name: HOMESCREEN,
+      name: AppRoutes.homeScreen,
       page: () => const HomeScreen(),
     ),
     GetPage(
-      name: NOTIFICATION,
+      name: AppRoutes.notification,
       page: () => NotificationPage(),
     ),
     GetPage(
-      name: APPOINTMENTVIEW,
+      name: AppRoutes.appointmentView,
       page: () => AppointmentView(
         doctorId: 'doctorId',
       ),
     ),
     GetPage(
-      name: addRating,
+      name: AppRoutes.addRating,
       page: () => RatingPage(
         doctorId: Get.arguments['doctorId'],
       ), // Pass the doctorId
     ),
     // for doctorside
     GetPage(
-      name: doctoDashboardView,
+      name:AppRoutes.doctoDashboardView,
       page: () => DoctorDashboardView(),
     ),
     GetPage(
-        name: patientAppointmentView,
+        name: AppRoutes.patientAppointmentView,
         page: () => PatientAppointmentView(
               doctorId: Get.arguments['doctorId'],
             )),
@@ -102,13 +85,13 @@ class AppRoutes {
       },
     ),
     GetPage(
-      name: reviewRating,
+      name:AppRoutes.reviewRating,
       page: () => DoctorReviewsPage(
         Get.arguments['doctorId'],
       ),
     ),
     GetPage(
-        name: doctorProfileUpdate,
+        name: AppRoutes.doctorProfileUpdate,
         page: () {
           final String doctorId = Get.arguments['doctorId'];
           print("doctorIdasd :${doctorId}"); // Correct way to retrieve
@@ -121,9 +104,9 @@ class AppRoutes {
             Get.arguments['doctorId']; // Correctly retrieving doctorId
         print("doctorId: $doctorId"); // Logging to confirm
         return EditDoctorProfilePage(
-          // doctorId: doctorId, // Passing doctorId to the widget
-        );
+            // doctorId: doctorId, // Passing doctorId to the widget
+            );
       },
     ),
   ];
-}
+

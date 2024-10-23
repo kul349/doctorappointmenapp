@@ -1,6 +1,6 @@
 import 'package:doctorappointmenapp/controllers/auth_controller.dart';
-import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

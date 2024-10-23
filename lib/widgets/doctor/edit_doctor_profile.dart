@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:doctorappointmenapp/routes/app_routes.dart';
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';

@@ -1,6 +1,6 @@
 import 'package:doctorappointmenapp/controllers/doctor/doctordashboard_controller.dart';
-import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/services/doctor/login_authservice.dart';
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
@@ -36,7 +36,7 @@ class DoctorDashboardView extends StatelessWidget {
               try {
                 await _authService.doctorLogout(); // Call the logout function
                 Get.offAllNamed(
-                    AppRoutes.HOME); // Navigate to login page after logout
+                    AppRoutes.home); // Navigate to login page after logout
               } catch (e) {
                 Get.snackbar("Error", "Logout failed. Please try again.");
               }
@@ -80,7 +80,7 @@ class DoctorDashboardView extends StatelessWidget {
                 onTap: () async {
                   try {
                     await _authService.doctorLogout();
-                    Get.offAllNamed(AppRoutes.HOME);
+                    Get.offAllNamed(AppRoutes.home);
                   } catch (e) {
                     Get.snackbar("Error", "Logout failed. Please try again.");
                   }

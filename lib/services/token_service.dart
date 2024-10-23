@@ -1,5 +1,5 @@
 // token_service.dart
-import 'package:doctorappointmenapp/routes/app_routes.dart';
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -56,12 +56,12 @@ class TokenService {
           // Session expired, redirect to doctor login
           await removeToken(); // Clear the token
           Get.offAllNamed(AppRoutes
-              .DOCTOR_LOGIN); // Assuming you're using GetX for navigation
+              .doctorLogin); // Assuming you're using GetX for navigation
         } else if (isPatient) {
           // Session expired, redirect to patient login
           await removeToken(); // Clear the token
           Get.offAllNamed(AppRoutes
-              .PATIENT_LOGIN); // Assuming you're using GetX for navigation
+              .patientLogin); // Assuming you're using GetX for navigation
         } else {
           print(
               'Unknown token type, unable to identify user as doctor or patient.');
@@ -73,7 +73,7 @@ class TokenService {
     } else {
       print('No token found, redirect to login.');
       // Redirect to a common login page if no token is found
-      Get.offAllNamed(AppRoutes.HOME); // Or handle based on your app's flow
+      Get.offAllNamed(AppRoutes.home); // Or handle based on your app's flow
     }
   }
 }

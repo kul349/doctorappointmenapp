@@ -1,10 +1,10 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:doctorappointmenapp/controllers/auth_controller.dart';
 import 'package:doctorappointmenapp/controllers/time_slot_controller.dart';
-import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/services/bookappointment.dart';
 import 'package:doctorappointmenapp/services/token_service.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:doctorappointmenapp/utils/decode_patient_token.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

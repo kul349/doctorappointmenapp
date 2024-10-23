@@ -1,5 +1,5 @@
-import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/services/token_service.dart';
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -25,9 +25,9 @@ class SplashController extends GetxController {
             decodedToken.containsKey('specialization');
 
         if (isDoctor) {
-          Get.offAllNamed(AppRoutes.DOCTOR_LOGIN); // Redirect to doctor login
+          Get.offAllNamed(AppRoutes.doctorLogin); // Redirect to doctor login
         } else {
-          Get.offAllNamed(AppRoutes.PATIENT_LOGIN); // Redirect to patient login
+          Get.offAllNamed(AppRoutes.patientLogin); // Redirect to patient login
         }
         return; // Exit to stop further execution
       }
@@ -55,17 +55,17 @@ class SplashController extends GetxController {
           );
         } else if (isPatient) {
           Get.offAllNamed(
-            AppRoutes.HOMESCREEN,
+            AppRoutes.homeScreen,
           );
         } else {
-          Get.offAllNamed(AppRoutes.HOME);
+          Get.offAllNamed(AppRoutes.home);
         }
       } catch (e) {
         print('Error decoding token: $e');
-        Get.offAllNamed(AppRoutes.HOME);
+        Get.offAllNamed(AppRoutes.home);
       }
     } else {
-      Get.offAllNamed(AppRoutes.HOME); // Redirect to home if no token
+      Get.offAllNamed(AppRoutes.home); // Redirect to home if no token
     }
   }
 }

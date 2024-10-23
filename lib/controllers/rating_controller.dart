@@ -63,7 +63,7 @@ class RatingController extends GetxController {
         print(
             'Rating submitted successfully, navigating to AppointmentView...');
         Get.offNamed(
-            AppRoutes.APPOINTMENTVIEW); // Navigate back to appointment page
+            AppRoutes.appointmentView); // Navigate back to appointment page
       } else {
         // Log detailed response
         print('Response status code: ${response.statusCode}');

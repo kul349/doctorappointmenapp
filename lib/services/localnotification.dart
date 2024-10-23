@@ -67,7 +67,7 @@ Future<void> _handleNotificationTap(
   if (notificationResponse.payload == null) {
     print("Notification payload is null");
     Get.toNamed(
-        AppRoutes.HOME); // Navigate to the home page if payload is missing
+        AppRoutes.home); // Navigate to the home page if payload is missing
     return;
   }
 
@@ -98,14 +98,14 @@ Future<void> _handleNotificationTap(
           arguments: {'userId': userId});
     } else if (userType == 'Patient') {
       Get.toNamed(
-        AppRoutes.NOTIFICATION,
+        AppRoutes.notification,
       );
     } else {
       print("Unknown user type in payload or token.");
-      Get.toNamed(AppRoutes.HOME); // Fallback to home if userType is unknown
+      Get.toNamed(AppRoutes.home); // Fallback to home if userType is unknown
     }
   } else {
     // If no token is found, navigate to the home page
-    Get.toNamed(AppRoutes.HOME);
+    Get.toNamed(AppRoutes.home);
   }
 }

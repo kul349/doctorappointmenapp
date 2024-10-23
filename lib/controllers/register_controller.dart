@@ -74,7 +74,7 @@ class RegisterController extends GetxController {
         Get.snackbar('Success', 'Registration successful');
         print('Registration successful: ${data['message']}');
 
-        Get.toNamed(AppRoutes.PATIENT_LOGIN);
+        Get.toNamed(AppRoutes.patientLogin);
       } else {
         final errorData = jsonDecode(responseBody);
         Get.snackbar('Error', errorData['message'] ?? 'Registration failed');

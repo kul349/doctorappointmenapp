@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:doctorappointmenapp/controllers/doctor_register_controller.dart';
-import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart'; // Add this for image picking
@@ -165,7 +165,7 @@ class DoctorRegisterView extends StatelessWidget {
               Center(
                 child: TextButton(
                   onPressed: () {
-                    Get.toNamed(AppRoutes.DOCTOR_LOGIN);
+                    Get.toNamed(AppRoutes.doctorLogin);
                   },
                   child: Text(
                     'Already have an account? Login',
