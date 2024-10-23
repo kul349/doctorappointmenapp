@@ -1,4 +1,4 @@
-import 'package:doctorappointmenapp/routes/app_routes.dart';
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:get/get.dart';
 import 'package:doctorappointmenapp/controllers/auth_controller.dart'; // Import AuthController
 
@@ -14,18 +14,18 @@ class BottomNavController extends GetxController {
 
     switch (index) {
       case 0:
-        Get.toNamed(AppRoutes.HOMESCREEN); // Navigate to Home page
+        Get.toNamed(AppRoutes.homeScreen); // Navigate to Home page
         break;
       case 1:
         print("Navigating to Notification");
 
         // Pass the patientId to the Notification page
-        Get.toNamed(AppRoutes.NOTIFICATION, arguments: {
+        Get.toNamed(AppRoutes.notification, arguments: {
           'userId': patientId,
         });
         break;
       case 2:
-        Get.toNamed(AppRoutes.APPOINTMENTVIEW); // Navigate to Appointment page
+        Get.toNamed(AppRoutes.appointmentView); // Navigate to Appointment page
         break;
     }
   }
