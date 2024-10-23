@@ -4,6 +4,7 @@ import 'package:doctorappointmenapp/controllers/BottomNavController.dart';
 import 'package:doctorappointmenapp/controllers/auth_controller.dart';
 import 'package:doctorappointmenapp/controllers/doctor/doctordashboard_controller.dart';
 import 'package:doctorappointmenapp/controllers/doctor_menu_controller.dart';
+import 'package:doctorappointmenapp/controllers/favorites_doctor_controller.dart';
 import 'package:doctorappointmenapp/controllers/patient_getalldoctor_controller.dart';
 import 'package:doctorappointmenapp/services/localnotification.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
@@ -32,6 +33,7 @@ void main() async {
   Get.put(BottomNavController());
   Get.put(DoctorController());
   Get.put(DoctorProfileUpdateController());
+  Get.put(FavoritesController());
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Firebase
