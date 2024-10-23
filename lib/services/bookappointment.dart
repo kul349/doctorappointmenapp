@@ -10,6 +10,7 @@ Future<void> bookAppointment(
     required String date,
     required String startTime}) async {
   try {
+    print("patientID for appointment:$patientId");
     final response =
         await http.post(Uri.parse("$baseUrl/appointment/getAppointment"),
             headers: {
