@@ -1,4 +1,4 @@
-const String baseUrl = 'https://backendserver-jivo.onrender.com/api/v1';
+// const String baseUrl = 'https://backendserver-jivo.onrender.com/api/v1';
 const String notificationChannelId = 'doctor_notifications';
 const String notificationChannelName = 'Doctor Notifications';
-// const String baseUrl = 'http://192.168.60.108:8000/api/v1';
+const String baseUrl = 'http://192.168.60.170:8000/api/v1';
