@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:doctorappointmenapp/services/doctor/doctor_authservice.dart';
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:doctorappointmenapp/routes/app_routes.dart'; // Import your routes
 
 class DoctorRegisterController extends GetxController {
   final TextEditingController fullNameController = TextEditingController();
@@ -55,7 +55,7 @@ class DoctorRegisterController extends GetxController {
     if (isSuccess) {
       Get.snackbar("Success", "Doctor registered successfully");
       Get.offAllNamed(
-          AppRoutes.DOCTOR_LOGIN); // Navigate to the doctor login page
+          AppRoutes.doctorLogin); // Navigate to the doctor login page
     } else {
       Get.snackbar("Error", "Failed to register doctor");
     }
