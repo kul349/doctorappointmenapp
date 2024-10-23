@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:doctorappointmenapp/controllers/BottomNavController.dart';
 import 'package:doctorappointmenapp/controllers/auth_controller.dart';
@@ -6,15 +5,15 @@ import 'package:doctorappointmenapp/controllers/doctor/doctordashboard_controlle
 import 'package:doctorappointmenapp/controllers/doctor_menu_controller.dart';
 import 'package:doctorappointmenapp/controllers/favorites_doctor_controller.dart';
 import 'package:doctorappointmenapp/controllers/patient_getalldoctor_controller.dart';
+import 'package:doctorappointmenapp/routes/app_routes.dart';
 import 'package:doctorappointmenapp/services/localnotification.dart';
 import 'package:doctorappointmenapp/themes/app_theme.dart';
-
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import 'routes/app_routes.dart';
 
 // Initialize Flutter Local Notifications
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -93,7 +92,7 @@ class MyApp extends StatelessWidget {
       initialRoute: AppRoutes.splash,
 
       // Define all the routes of the app
-      getPages: AppRoutes.routes,
+      getPages: routes,
     );
   }
 }
