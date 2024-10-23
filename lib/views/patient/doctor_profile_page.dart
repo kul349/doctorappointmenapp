@@ -120,7 +120,7 @@ class _DoctorProfileDetailsState extends State<DoctorProfileDetails> {
                               try {
                                 await bookAppointment(
                                     token: token,
-                                    patientId: authController.patientId.value,
+                                    patientId: patientId ?? "",
                                     doctorId: controller.doctor.id,
                                     date: formattedDate,
                                     startTime: formattedTimeSlot);
