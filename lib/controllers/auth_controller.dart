@@ -1,11 +1,10 @@
 // auth_controller.dart
 
 import 'package:doctorappointmenapp/models/patient/patient_model.dart';
-import 'package:doctorappointmenapp/routes/app_routes.dart';
+import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:get/get.dart';
 import 'package:doctorappointmenapp/services/auth_service.dart';
 import 'package:doctorappointmenapp/services/token_service.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AuthController extends GetxController {
   final AuthService _authService = AuthService();
@@ -31,7 +30,7 @@ class AuthController extends GetxController {
         } else {
           print('Token after login: $token');
         }
-        Get.offAllNamed(AppRoutes.HOMESCREEN);
+        Get.offAllNamed(AppRoutes.homeScreen);
       } else {
         Get.snackbar('Error', 'Login failed. Please try again.');
       }
