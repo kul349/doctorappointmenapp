@@ -38,6 +38,8 @@ class DoctorProfileUpdateController extends GetxController {
   TextEditingController licenseNumberController = TextEditingController();
   TextEditingController consultationFeeController = TextEditingController();
   TextEditingController bioController = TextEditingController();
+  TextEditingController latitudeController=TextEditingController();
+  TextEditingController longitudeController=TextEditingController();
 
   // File for avatar upload
   File? avatarFile;
@@ -86,6 +88,8 @@ class DoctorProfileUpdateController extends GetxController {
         'consultationFee':
             double.tryParse(consultationFeeController.text) ?? 0.0,
         'bio': bioController.text,
+        'latitude': double.tryParse(latitudeController.text),
+        'longitude': double.tryParse(longitudeController.text)
       };
 
       // Call service to update profile

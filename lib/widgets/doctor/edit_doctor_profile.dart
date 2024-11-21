@@ -41,31 +41,26 @@ class EditDoctorProfilePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Full Name Field
                     _buildTextField(
                       controller.fullNameController,
                       'Full Name',
                       Icons.person_outline,
                     ),
                     const SizedBox(height: 16),
-                    // Doctor Name Field
                     _buildTextField(
                       controller.doctorNameController,
                       'Doctor Name',
                       Icons.badge_outlined,
                     ),
                     const SizedBox(height: 16),
-                    // Clinic Name Field
                     _buildTextField(
                       controller.clinicNameController,
                       'Clinic Name',
                       Icons.local_hospital_outlined,
                     ),
                     const SizedBox(height: 16),
-                    // Avatar Image Picker
                     _buildImagePicker(controller),
                     const SizedBox(height: 32),
-                    // Section Title
                     const Text(
                       'Clinic Information',
                       style: TextStyle(
@@ -75,21 +70,18 @@ class EditDoctorProfilePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Clinic Address Field
                     _buildTextField(
                       controller.clinicAddressController,
                       'Clinic Address',
                       Icons.location_on_outlined,
                     ),
                     const SizedBox(height: 16),
-                    // License Number Field
                     _buildTextField(
                       controller.licenseNumberController,
                       'License Number',
                       Icons.verified_outlined,
                     ),
                     const SizedBox(height: 16),
-                    // Consultation Fee Field
                     _buildTextField(
                       controller.consultationFeeController,
                       'Consultation Fee',
@@ -97,21 +89,47 @@ class EditDoctorProfilePage extends StatelessWidget {
                       TextInputType.number,
                     ),
                     const SizedBox(height: 16),
-                    // Bio Field
                     _buildTextField(
                       controller.bioController,
                       'Bio',
                       Icons.info_outline,
                       TextInputType.text,
                     ),
+                    const SizedBox(height: 16),
+                    // Location Section Title
+                    const Text(
+                      'Location Information',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Latitude Field
+                    _buildTextField(
+                      controller.latitudeController,
+                      'Latitude',
+                      Icons.gps_fixed,
+                      TextInputType.numberWithOptions(decimal: true),
+                    ),
+                    const SizedBox(height: 16),
+                    // Longitude Field
+                    _buildTextField(
+                      controller.longitudeController,
+                      'Longitude',
+                      Icons.gps_fixed,
+                      TextInputType.numberWithOptions(decimal: true),
+                    ),
                     const SizedBox(height: 30),
-                    // Update Button
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
                           if (controller.fullNameController.text.isEmpty ||
                               controller.doctorNameController.text.isEmpty ||
-                              controller.clinicNameController.text.isEmpty) {
+                              controller.clinicNameController.text.isEmpty ||
+                              controller.latitudeController.text.isEmpty ||
+                              controller.longitudeController.text.isEmpty) {
                             Get.snackbar(
                                 'Error', 'Please fill in all required fields.');
                             return;

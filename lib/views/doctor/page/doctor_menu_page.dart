@@ -127,7 +127,27 @@ class DoctorListPage extends StatelessWidget {
                             style: const TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 10),
+                          IconButton(
+                            onPressed: () {
+                              // Get latitude and longitude from the doctor's location
+                              final double longitude =
+                                  doctor.locationCoordinates?[0] ?? 0.0;
+                              final double latitude =
+                                  doctor.locationCoordinates?[1] ?? 0.0;
+                              print(
+                                  "Longitude: $longitude, Latitude: $latitude");
 
+                              // Navigate to the map page with latitude and longitude
+                              Get.toNamed(
+                                '/map', // Your map page route
+                                parameters: {
+                                  'latitude': latitude.toString(),
+                                  'longitude': longitude.toString(),
+                                },
+                              );
+                            },
+                            icon: const Icon(Icons.map_rounded),
+                          ),
                           // Rating, Star, and Book Button
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,8 +175,6 @@ class DoctorListPage extends StatelessWidget {
                               ElevatedButton(
                                 onPressed: () {
                                   // Navigate to the DoctorProfileDetails
-                                  print(
-                                      'Navigating to DoctorProfileDetails with doctor: ${doctor.id}');
                                   Get.to(
                                     () => DoctorProfileDetails(),
                                     arguments:

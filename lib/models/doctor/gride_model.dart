@@ -36,6 +36,11 @@ class DoctorModel {
   // Factory constructor to create an instance from JSON
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     final ratingsSummary = json['ratingsSummary'] ?? {};
+    final location = json['location'] ?? {};
+    final coordinates = location['coordinates'] ?? [];
+
+    // Debugging print statement to check the location data
+    print("Location Coordinates: $coordinates");
 
     return DoctorModel(
       id: json['_id'] ?? '',
@@ -54,11 +59,12 @@ class DoctorModel {
       consultationFee: json['consultationFee'] != null
           ? (json['consultationFee']).toDouble()
           : null,
-      locationCoordinates:
-          (json['location'] != null && json['location']['coordinates'] != null)
-              ? List<double>.from(
-                  json['location']['coordinates'].map((e) => e.toDouble()))
-              : null,
+      locationCoordinates: coordinates.isNotEmpty
+          ? List<double>.from(coordinates.map((e) => e.toDouble()))
+          : [
+              0.0,
+              0.0
+            ], // Defaulting to [0.0, 0.0] if coordinates are not available
     );
   }
 

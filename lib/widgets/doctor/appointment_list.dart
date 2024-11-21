@@ -9,7 +9,7 @@ class PatientAppointmentView extends StatelessWidget {
   final String doctorId;
 
   // Constructor that accepts doctorId
-   const PatientAppointmentView({super.key, required this.doctorId});
+  const PatientAppointmentView({super.key, required this.doctorId});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,6 @@ class PatientAppointmentView extends StatelessWidget {
                     ),
                     subtitle: Column(
                       children: [
-                        
                         Row(
                           children: [
                             Expanded(

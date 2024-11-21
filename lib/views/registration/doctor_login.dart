@@ -11,7 +11,7 @@ class DoctorLoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-    final DoctorLoginAuthService _doctorLoginAuthService =
+    final DoctorLoginAuthService doctorLoginAuthService =
         DoctorLoginAuthService();
     final doctorId = Get.arguments?['doctorId']; // Get the doctorId
 
@@ -67,14 +67,15 @@ class DoctorLoginView extends StatelessWidget {
                       final password = passwordController.text.trim();
 
                       // Trigger login process
-                      final doctor = await _doctorLoginAuthService.doctorLogin(
+                      final doctor = await doctorLoginAuthService.doctorLogin(
                           email, password);
 
                       if (doctor != null) {
                         Get.snackbar("Success", "Login successful");
+
                         Get.offAllNamed(AppRoutes.doctoDashboardView,
                             arguments: {
-                              'doctorId': doctorId
+                              'doctorId': doctor.id
                             }); // Navigate to doctor dashboard or home
                       } else {
                         Get.snackbar("Error",

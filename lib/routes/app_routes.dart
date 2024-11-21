@@ -1,6 +1,7 @@
 import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:doctorappointmenapp/views/notification/notification.dart';
 import 'package:doctorappointmenapp/views/patient/appointment.dart';
+import 'package:doctorappointmenapp/views/patient/doctor_map_screen.dart';
 import 'package:doctorappointmenapp/views/patient/get_ratting_page.dart';
 import 'package:doctorappointmenapp/views/patient/home_screen.dart';
 import 'package:doctorappointmenapp/views/registration/doctor_login.dart';
@@ -94,7 +95,6 @@ import '../views/home_view.dart';
         name: AppRoutes.doctorProfileUpdate,
         page: () {
           final String doctorId = Get.arguments['doctorId'];
-          print("doctorIdasd :${doctorId}"); // Correct way to retrieve
           return DoctorProfile(doctorId: doctorId);
         }),
     GetPage(
@@ -108,5 +108,10 @@ import '../views/home_view.dart';
             );
       },
     ),
+    GetPage(
+  name: AppRoutes.map,
+  page: ()=>MapScreen(latitude: double.parse(Get.parameters['latitude']!, ), longitude: double.parse(Get.parameters['longitude']!,
+),
+  ))
   ];
 
