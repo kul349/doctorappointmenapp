@@ -1,6 +1,7 @@
 import 'package:doctorappointmenapp/utils/constant.dart';
 import 'package:doctorappointmenapp/views/notification/notification.dart';
 import 'package:doctorappointmenapp/views/patient/appointment.dart';
+import 'package:doctorappointmenapp/views/patient/doctor_change_password.dart';
 import 'package:doctorappointmenapp/views/patient/doctor_map_screen.dart';
 import 'package:doctorappointmenapp/views/patient/get_ratting_page.dart';
 import 'package:doctorappointmenapp/views/patient/home_screen.dart';
@@ -112,6 +113,8 @@ import '../views/home_view.dart';
   name: AppRoutes.map,
   page: ()=>MapScreen(latitude: double.parse(Get.parameters['latitude']!, ), longitude: double.parse(Get.parameters['longitude']!,
 ),
-  ))
+  )),
+  GetPage(name:AppRoutes.changePassword,
+  page:()=>ChangePasswordScreen())
   ];
 

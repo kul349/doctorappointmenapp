@@ -133,24 +133,6 @@ class DoctorDashboardView extends StatelessWidget {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
-                    Get.toNamed(
-                        '/patient_profiles'); // Navigate to patient profiles
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: greenColor,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    'View Patient Profiles',
-                    style: TextStyle(color: whiteColor, fontSize: 16),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
                     Get.toNamed(AppRoutes.reviewRating, arguments: {
                       'doctorId': doctorId, // Use doctorId from arguments
                     });

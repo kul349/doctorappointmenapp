@@ -44,5 +44,18 @@ class AuthController extends GetxController {
     Get.offAllNamed('/login');
   }
 
-  void doctorLogout() {}
+  Future<bool> changePassword(String oldPassword, String newPassword) async {
+    try {
+      final isSuccess = await _authService.changePassword(oldPassword, newPassword);
+      if (isSuccess) {
+        print('Password changed successfully');
+      } else {
+        print('Failed to change password');
+      }
+      return isSuccess;
+    } catch (e) {
+      print('Error in AuthController during password change: $e');
+      return false;
+    }
+  }
 }

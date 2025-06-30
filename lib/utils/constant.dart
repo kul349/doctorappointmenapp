@@ -1,7 +1,7 @@
 // const String baseUrl = 'https://backendserver-jivo.onrender.com/api/v1';
 const String notificationChannelId = 'doctor_notifications';
 const String notificationChannelName = 'Doctor Notifications';
-const String baseUrl = 'http://192.168.60.73:8000/api/v1';
+const String baseUrl = 'http://172.16.2.82:8000/api/v1';
 
 class AppRoutes {
 // list of static routes:
@@ -23,4 +23,5 @@ class AppRoutes {
   static const String reviewRating = '/reviewRating';
   static const String doctorProfileUpdate = '/doctorProfileUpdate';
   static const String map = '/map';
+  static const String changePassword = '/change-password';
 }

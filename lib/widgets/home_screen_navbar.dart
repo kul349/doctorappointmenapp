@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 class HomeScreenNavbar extends StatelessWidget {
   HomeScreenNavbar({super.key});
   final AuthController authController = Get.find<AuthController>();
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -26,7 +27,6 @@ class HomeScreenNavbar extends StatelessWidget {
         FutureBuilder<String?>(
           future: TokenHelper.getAvatarUrl(), // Get the avatar URL
           builder: (context, snapshot) {
-            // Check if the snapshot has data
             String avatarUrl = snapshot.data ?? '';
             const defaultImage =
                 'https://media.istockphoto.com/id/1805954358/photo/hr-human-resources-recruitment-team-staff-management-business-concept-relationship-management.jpg?s=1024x1024&w=is&k=20&c=sQtdh8xmzErxaFTWqgX5UTC4lEJqnn7ejQyEnN7aVlQ=';
@@ -41,18 +41,22 @@ class HomeScreenNavbar extends StatelessWidget {
               itemBuilder: (BuildContext context) {
                 return [
                   const PopupMenuItem<String>(
+                    value: 'change_password',
+                    child: Text('Change Password'),
+                  ),
+                  const PopupMenuItem<String>(
                     value: 'logout',
                     child: Text('Logout'),
                   ),
                 ];
               },
               onSelected: (value) async {
-                if (value == 'logout') {
-                  print("Logging out..."); // Debugging line
-                  await authController
-                      .logoutUser(); // Call the logoutUser method
-                  Get.offAllNamed(
-                      '/login'); // Navigate to the login screen after logout
+                if (value == 'change_password') {
+                  Get.toNamed('/change-password');
+                   // Navigate to ChangePasswordScreen
+                } else if (value == 'logout') {
+                  await authController.logoutUser(); // Logout
+                  Get.offAllNamed('/login'); // Navigate to Login Screen
                 }
               },
             );

@@ -6,17 +6,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  // Future<bool> registerPatient(String email, String password) async {
-  //   // Implement your patient registration logic here
-  //   // Example: Send email and password to your backend or Firebase
-  //   return true; // Example
-  // }
-
-  // Future<bool> registerDoctor(String email, String password) async {
-  //   // Implement your doctor registration logic here
-  //   // Example: Send email and password to your backend or Firebase
-  //   return true; // Example
-  // }
   final TokenService _tokenService = TokenService(); // Instance of TokenService
 
   // Function to handle user login and store token
@@ -84,5 +73,33 @@ class AuthService {
     }
   }
 
-  // registerDoctor({required String fullName, required String email, required String doctorName, required String password, required String specialization, required String qualification, required String experience, File? avatar}) {}
+  // Function to change password
+  Future<bool> changePassword(String oldPassword, String newPassword) async {
+    try {
+      final token = await _tokenService.getToken(); // Get the stored token
+      final url = Uri.parse('$baseUrl/users/change-password'); // API endpoint
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'oldPassword': oldPassword,
+          'newPassword': newPassword,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('Password changed successfully');
+        return true; // Indicate success
+      } else {
+        print('Change password failed: ${response.body}');
+        return false; // Indicate failure
+      }
+    } catch (e) {
+      print('An error occurred during password change: $e');
+      throw Exception('Error during password change');
+    }
+  }
 }

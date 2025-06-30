@@ -31,7 +31,6 @@ class DoctorRegisterController extends GetxController {
     print('FCM Token: $fcmToken');
   }
 
-
   Future<void> registerDoctor() async {
     // Add validation for password confirmation
     if (passwordController.text != confirmPasswordController.text) {
@@ -41,16 +40,15 @@ class DoctorRegisterController extends GetxController {
 
     // Call the AuthService to register the doctor
     final isSuccess = await DoctorAuthService().registerDoctor(
-      fullName: fullNameController.text,
-      email: emailController.text,
-      doctorName: doctorNameController.text,
-      password: passwordController.text,
-      specialization: specializationController.text,
-      qualification: qualificationController.text,
-      experience: experienceController.text,
-      avatarImage: avatarImage!, // Ensure avatarImage is not null
-      fcmToken:fcmToken!
-    );
+        fullName: fullNameController.text,
+        email: emailController.text,
+        doctorName: doctorNameController.text,
+        password: passwordController.text,
+        specialization: specializationController.text,
+        qualification: qualificationController.text,
+        experience: experienceController.text,
+        avatarImage: avatarImage!, // Ensure avatarImage is not null
+        fcmToken: fcmToken!);
 
     if (isSuccess) {
       Get.snackbar("Success", "Doctor registered successfully");
